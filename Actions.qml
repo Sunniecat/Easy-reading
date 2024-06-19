@@ -10,6 +10,8 @@ Item {
     //视图
     property alias zoomIn: _zoomIn
     property alias zoomOut: _zoomOut
+    property alias rotateLeft: _rotateLeft
+    property alias rotateRight: _rotateRight
 
     //文件
     Action {
@@ -47,5 +49,17 @@ Item {
         icon.name: "zoom-out"
         shortcut: StandardKey.ZoomOut
         // onTriggered:
+    }
+    Action {
+        id:_rotateLeft
+        text: "向左旋转"
+        icon.name: "object-rotate-left-symbolic"
+        shortcut: "Ctrl+L"
+    }
+    Action {
+        id:_rotateRight
+        text: "向右旋转"
+        icon.name: "object-rotate-right-symbolic"
+        shortcut: "Ctrl+R"
     }
 }
