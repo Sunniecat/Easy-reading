@@ -10,6 +10,7 @@ ApplicationWindow {
     color: "lightgrey"
     title: "Easy reading"
     visible: true
+    property alias view: _view
 
     menuBar: MenuBar {
         Menu {
@@ -32,13 +33,14 @@ ApplicationWindow {
         }
     }
 
-    PdfMultiPageView {
-        id: view
-        anchors.fill: parent
-        document: content.pdfDoc
-        // searchString  可以做搜索框
-        //onCurrentPageChanged   可以做页面跳转之类的东西
+    Drawer {
+        id: sidebar //侧边弹出栏
+
     }
+
+
+
+
     Actions {
         id: actions
         open.onTriggered: content.dialogs.fileOpen.open()
@@ -46,5 +48,12 @@ ApplicationWindow {
 
     Content{
         id:content
+    }
+    PdfMultiPageView {//这个不放window里不显示页面，不理解为什么
+        id: _view
+        anchors.fill: parent
+        document: content.pdfDoc
+        // searchString  可以做搜索框
+        //onCurrentPageChanged   可以做页面跳转之类的东西
     }
 }

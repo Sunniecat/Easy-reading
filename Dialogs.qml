@@ -14,7 +14,5 @@ Item {
         fileMode: FileDialog.OpenFile
         nameFilters: [ "PDF files (*.pdf)" ]
 
-        onAccepted: pdfDoc.source=selectedFile
-    }
-
+}
 }

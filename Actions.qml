@@ -41,14 +41,14 @@ Item {
         text: "放大"
         icon.name: "zoom-in"
         shortcut: StandardKey.ZoomIn  //一般是Ctrl + "-"
-        // onTriggered:
+        onTriggered:view.renderScale*=Math.sqrt(2)
     }
     Action {
         id: _zoomOut   //一般是 Ctrl + ”+“
         text: "缩小"
         icon.name: "zoom-out"
         shortcut: StandardKey.ZoomOut
-        // onTriggered:
+         onTriggered: view.renderScale /= Math.sqrt(2)
     }
     Action {
         id:_rotateLeft
