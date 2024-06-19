@@ -1,8 +1,10 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Pdf
 
 ApplicationWindow {
+    id: appwindow
     width: 1200
     height: 800
     color: "lightgrey"
@@ -32,5 +34,17 @@ ApplicationWindow {
 
     Actions {
         id: actions
+        open.onTriggered: {
+            content.dialogs.fileOpen.open()
+        }
     }
+    PdfMultiPageView{
+        id: pdfview
+        anchors.fill: parent
+        document: content.pdfdoc
+    }
+    Content {
+        id: content
+    }
+
 }
