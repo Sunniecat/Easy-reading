@@ -19,6 +19,7 @@ qt_add_qml_module(appEasy-reading
     QML_FILES Actions.qml
     QML_FILES Content.qml
     QML_FILES Dialogs.qml
+    QML_FILES Controller.js
 )
 
 target_compile_features(appEasy-reading PRIVATE cxx_std_20)
