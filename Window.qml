@@ -4,6 +4,7 @@ import QtQuick.Layouts
 import QtQuick.Pdf
 
 ApplicationWindow {
+    id: appwindow
     width: 1200
     height: 800
     color: "lightgrey"
