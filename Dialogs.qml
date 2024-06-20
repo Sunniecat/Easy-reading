@@ -1,20 +1,15 @@
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Dialogs
+import QtQuick.Pdf
 
 Item {
     property alias fileOpen: _fileOpen
 
-    FileDialog {
+    //打开pdf文件窗口
+    FileDialog{
         id: _fileOpen
-        title: "Open a book file"
-        nameFilters: ["select a book file (*.pdf)"]
-        onAccepted: {
-
-            content.pdfdoc.source = selectedFile
-            console.log(content.pdfdoc.source)
-        }
-
+        title: "Open a PDF file"
+        nameFilters: [ "PDF files (*.pdf)" ]
     }
-
-
 }

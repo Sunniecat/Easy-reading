@@ -1,15 +1,39 @@
 import QtQuick
+// <<<<<<< HEAD
+// import QtQuick.Pdf
+
+// Rectangle {
+//     property alias pdfdoc: _pdfdoc
+//     property alias dialogs: _dialogs
+
+//     PdfDocument {
+//         id: _pdfdoc
+//     }
+//     Dialogs {
+//         id: _dialogs
+
+// =======
+import QtQuick.Controls
+import QtQuick.Dialogs
+// import QtQuick.Layouts
 import QtQuick.Pdf
 
-Rectangle {
-    property alias pdfdoc: _pdfdoc
+Item {
+    property alias pdfDoc: _pdfDoc
     property alias dialogs: _dialogs
 
-    PdfDocument {
-        id: _pdfdoc
+    //pdf文件类
+    PdfDocument{
+        id:_pdfDoc
+        source:"" //文件资源地址
     }
-    Dialogs {
-        id: _dialogs
 
+    Dialogs {
+        id:_dialogs
+        fileOpen.onAccepted: {
+            _pdfDoc.source=fileOpen.selectedFile
+            console.log(_pdfDoc.source)
+        }
+// >>>>>>> 55a51ce145669dcfdbee23e3b918eef17fb4d9b8
     }
 }

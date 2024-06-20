@@ -10,6 +10,8 @@ Item {
     //视图
     property alias zoomIn: _zoomIn
     property alias zoomOut: _zoomOut
+    property alias rotateLeft: _rotateLeft
+    property alias rotateRight: _rotateRight
 
     //文件
     Action {
@@ -39,15 +41,27 @@ Item {
         text: "放大"
         icon.name: "zoom-in"
         shortcut: StandardKey.ZoomIn  //一般是Ctrl + "+"  //经测试不是这个组合,而是Ctrl + shift + "+"
-        enabled: pdfview.renderScale < 10   //当符合条件时，此动作才是可用的（其实就是设置了缩放的上限即最大）
-        onTriggered: pdfview.renderScale *= 1.1  //每次在原有的比例上放大1.1倍数
+        enabled: _pdfMultiView.renderScale < 10   //当符合条件时，此动作才是可用的（其实就是设置了缩放的上限即最大）
+        onTriggered: _pdfMultiView.renderScale *= 1.1  //每次在原有的比例上放大1.1倍数
     }
     Action {
         id: _zoomOut   //一般是 Ctrl + ”-“
         text: "缩小"
         icon.name: "zoom-out"
         shortcut: StandardKey.ZoomOut
-        enabled: pdfview.renderScale > 0.1   //当符合条件时，此动作才是可用的（其实就是设置了缩放的下限即最小）
-        onTriggered: pdfview.renderScale /= 1.1
+        enabled: _pdfMultiView.renderScale > 0.1   //当符合条件时，此动作才是可用的（其实就是设置了缩放的下限即最小）
+        onTriggered: _pdfMultiView.renderScale /= 1.1
+    }
+    Action {
+        id:_rotateLeft
+        text: "向左旋转"
+        icon.name: "object-rotate-left-symbolic"
+        shortcut: "Ctrl+L"
+    }
+    Action {
+        id:_rotateRight
+        text: "向右旋转"
+        icon.name: "object-rotate-right-symbolic"
+        shortcut: "Ctrl+R"
     }
 }
