@@ -35,7 +35,7 @@ ApplicationWindow {
             SpinBox {
                 id: currentPageSB
                 from: 1
-                to: doc.pageCount
+                to: content.pdfDoc.pageCount
                 editable: true
                 onValueModified: view.goToPage(value - 1)
                 Shortcut {
@@ -50,75 +50,24 @@ ApplicationWindow {
         }
 
     }
-
-    Drawer{
-        id:silderbar
-        edge: Qt.LeftEdge
-        modal: false
-        width: 300
-        y: root.header.height+30
-        height: view.height
-        dim: false
-        clip: true
-
-        TabBar {
-            id: sidebarTabs
-            x: -width
-            rotation: -90
-            transformOrigin: Item.TopRight
-            currentIndex: 2 // bookmarks by default
-            TabButton {
-                text: qsTr("Bookmarks")
-            }
-            TabButton {
-                text: qsTr("Pages")
-            }
-        }
-        GroupBox{
-            anchors.fill: parent
-            anchors.leftMargin: sidebarTabs.height
-            StackLayout{
-                anchors.fill: parent
-                currentIndex: sidebarTabs.currentIndex
-                component InfoField:TextInput{
-                    width: parent
-                    selectByMouse: true
-                    readOnly: true
-                    wrapMode: Text.WordWrap
-                }
-                Column{
-                    spacing: 6
-                    width: parent.width - 6
-                    Label { font.bold: true; text: qsTr("Title") }
-                    InfoField { text:Content.pdfDoc.title }
-                }
-                TreeView {
-                    id: bookmarksTree
-                    implicitHeight: parent.height
-                    implicitWidth: parent.width
-                    columnWidthProvider: function() { return width }
-                    delegate: TreeViewDelegate {
-                        required property int page
-                        required property point location
-                        required property real zoom
-                        onClicked: view.goToLocation(page, location, zoom)
-                    }
-                    model: PdfBookmarkModel {
-                        document: content.pdfDoc
-                    }
-                    ScrollBar.vertical: ScrollBar { }
-                }
-            }
-        }
+    // DropArea {
+    //     anchors.fill: parent
+    //     keys: ["text/uri-list"]
+    //     onEntered: (drag) => {
+    //                    drag.accepted = (drag.proposedAction === Qt.MoveAction || drag.proposedAction === Qt.CopyAction) &&
+    //                    drag.hasUrls && drag.urls[0].endsWith("pdf")
+    //                }
+    //     onDropped: (drop) => {
+    //                    doc.source = drop.urls[0]
+    //                    drop.acceptProposedAction()
+    //                }
+    // }
 
 
-    }
 
     footer: ToolBar{
         RowLayout{
             ToolButton{  action: actions.popup }
-            ToolButton{ action:actions.popdown}
-
         }
 
     }

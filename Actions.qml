@@ -15,7 +15,6 @@ Item {
 
 
     property alias popup: _popup
-    property alias popdown: _popdown
     //文件
     Action {
         id: _open
@@ -41,16 +40,10 @@ Item {
 
     Action{
         id:_popup
-        text: "弹出侧边栏"
-        onTriggered: silderbar.open()
+        text: "侧边栏"
+        icon.name: "sidebar-expand-left"
+        onTriggered: content.drawer.open()
     }
-    Action{
-        id:_popdown
-        text: "收回侧边栏"
-        onTriggered: silderbar.close()
-    }
-
-
 
 
 
