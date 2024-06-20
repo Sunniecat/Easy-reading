@@ -12,6 +12,12 @@ Item {
     property alias zoomOut: _zoomOut
     property alias rotateLeft: _rotateLeft
     property alias rotateRight: _rotateRight
+    property alias zoomFitWidth: _zoomFitWidth
+    property alias zoomFitBest: _zoomFitBest
+    property alias zoomOriginal: _zoomOriginal
+    //工具
+    property alias drawerAction: _drawerAction
+    property alias searchResult: _searchResult
 
     //文件
     Action {
@@ -63,5 +69,38 @@ Item {
         text: "向右旋转"
         icon.name: "object-rotate-right-symbolic"
         shortcut: "Ctrl+R"
+    }
+
+    Action {
+        id:_zoomFitWidth
+        text: "适应宽度"
+        icon.name: "zoom-fit-width"
+        onTriggered: _pdfMultiView.scaleToWidth(appwindow.contentItem.width, appwindow.contentItem.height)
+    }
+    Action{
+        id:_zoomFitBest
+        text: "适应整页"
+        icon.name: "zoom-fit-best"
+        onTriggered: _pdfMultiView.scaleToPage(appwindow.contentItem.width, appwindow.contentItem.height)
+    }
+    Action{
+        id:_zoomOriginal
+        text: "初始化缩放"
+        icon.name: "zoom-fit-original"
+        onTriggered: _pdfMultiView.resetScale()
+    }
+
+    //工具
+    Action {
+        id: _drawerAction
+        // text: "侧边栏"
+        icon.name: "sidebar-expand-left"
+        // checkable: true
+        // checked:
+        onTriggered: content.drawer.open()
+    }
+    Action {
+        id: _searchResult
+        text: qsTr("搜索结果")
     }
 }
