@@ -13,12 +13,16 @@ Item {
     property alias rotateLeft: _rotateLeft
     property alias rotateRight: _rotateRight
 
+
+    property alias popup: _popup
+    property alias popdown: _popdown
     //文件
     Action {
         id: _open
         text: "打开(O)"  //用于打开文件
         icon.name: "document-open"
-        shortcut: StandardKey.Open  //一般是Ctrl + O
+        shortcut: "Ctrl+O"
+        //StandardKey.Open  //一般是Ctrl + O"
         // onTriggered:
     }
     Action {
@@ -34,6 +38,23 @@ Item {
         icon.name: "help-about"
         // onTriggered:
     }
+
+    Action{
+        id:_popup
+        text: "弹出侧边栏"
+        onTriggered: silderbar.open()
+    }
+    Action{
+        id:_popdown
+        text: "收回侧边栏"
+        onTriggered: silderbar.close()
+    }
+
+
+
+
+
+
 
     //视图
     Action {
