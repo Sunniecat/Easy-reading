@@ -12,6 +12,12 @@ Item {
     property alias zoomOut: _zoomOut
     property alias rotateLeft: _rotateLeft
     property alias rotateRight: _rotateRight
+    //工具
+    //侧边栏
+     property alias drawerAction: _drawerAction
+     property alias bookdir: _bookdir
+     property alias bookmarks: _bookmarks
+     property alias addmarks: _addmarks
 
     //文件
     Action {
@@ -63,5 +69,27 @@ Item {
         text: "向右旋转"
         icon.name: "object-rotate-right-symbolic"
         shortcut: "Ctrl+R"
+    }
+    //工具
+    Action {
+        id: _drawerAction
+        // text: "侧边栏"
+        icon.name: "sidebar-expand-left"
+        onTriggered: content.drawer.open()
+    }
+    Action {
+        id: _bookdir
+        text: qsTr("目录")
+        icon.name: "view-list-text"
+    }
+    Action {
+        id: _bookmarks
+        text: qsTr("书签")
+        icon.name: "bookmarks-bookmarked"
+    }
+    Action {
+        id: _addmarks
+        text: qsTr("添加书签")
+        icon.name: "bookmark-new"
     }
 }
