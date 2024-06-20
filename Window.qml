@@ -30,10 +30,12 @@ ApplicationWindow {
     }
     header: ToolBar {
             RowLayout{
+                ToolButton{ action: actions.drawerAction }
                 ToolButton{ action: actions.zoomIn }
                 ToolButton{ action: actions.zoomOut }
                 ToolButton{ action: actions.rotateLeft }
                 ToolButton{ action: actions.rotateRight }
+                ToolButton{ action: actions.addmarks }
             }
         }
 
