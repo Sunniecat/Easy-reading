@@ -12,6 +12,8 @@ Item {
     property alias zoomOut: _zoomOut
     property alias rotateLeft: _rotateLeft
     property alias rotateRight: _rotateRight
+    property alias seleCtall: _selectall
+    property alias ccccc: _copy
 
 
     property alias popup: _popup
@@ -75,5 +77,18 @@ Item {
         text: "向右旋转"
         icon.name: "object-rotate-right-symbolic"
         shortcut: "Ctrl+R"
+    }
+    Action{
+        id:_selectall
+        text:"全选"
+        icon.source: "edit-select-all"
+        onTriggered: view.selectAll()
+    }
+    Action{
+        id:_copy
+        text: "复制"
+        icon.source: "edit-copy"
+        enabled: view.selectedText !== ""
+        onTriggered: view.copySelectionToClipboard()
     }
 }

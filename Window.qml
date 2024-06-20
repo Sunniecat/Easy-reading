@@ -32,6 +32,7 @@ ApplicationWindow {
             ToolButton{ action: actions.zoomIn }
             ToolButton{ action: actions.zoomOut}
 
+
             SpinBox {
                 id: currentPageSB
                 from: 1
@@ -47,6 +48,8 @@ ApplicationWindow {
                     onActivated: view.goToPage(currentPageSB.value)
                 }
             }
+            ToolButton{action:actions.seleCtall}
+            ToolButton{action:actions.ccccc}
         }
 
     }
