@@ -8,6 +8,9 @@ Item {
     property alias pdfDoc: _pdfDoc
     property alias dialogs: _dialogs
     property alias drawer: _drawer
+    //侧边栏里
+    property alias bookmarksview: _bookmarksview
+    property alias marksModel: _marksModel
 
     //pdf文件类
     PdfDocument{
@@ -35,6 +38,10 @@ Item {
             }
             TabButton{
                 text:qsTr( "缩略图" )
+                width: 60
+            }
+            TabButton{
+                text:qsTr( "书签" )
                 width: 60
             }
         }
@@ -159,6 +166,21 @@ Item {
                 }
             }
          }
+        TreeView {
+            id: _bookmarksview
+            implicitHeight: parent.height
+            implicitWidth: parent.width
+            model: _marksModel
+            delegate: ItemDelegate {
+                required property string name
+                required property int value
+                text: name + value
+                onClicked: _pdfMultiView.goToPage(value)
+            }
+            ListModel{
+                id: _marksModel
+            }
+        }
       }
    }
 }

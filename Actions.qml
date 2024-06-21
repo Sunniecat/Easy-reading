@@ -21,6 +21,7 @@ Item {
     property alias drawerAction: _drawerAction //侧边栏
     property alias selectAll: _selectAll
     property alias copy: _copy
+    property alias addmarks: _addmarks
 
     //文件
     Action {
@@ -112,5 +113,10 @@ Item {
         icon.name: "edit-copy-symbolic"
         enabled: _pdfMultiView.selectedText !== ""
         onTriggered: _pdfMultiView.copySelectionToClipboard()
+    }
+    Action {
+        id: _addmarks
+        text: qsTr("添加书签")
+        icon.name: "bookmark-new"
     }
 }

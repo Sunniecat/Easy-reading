@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Pdf
 import QtQuick.Layouts
+import "controller.js" as Controller
 
 ApplicationWindow {
     id: appwindow
@@ -42,6 +43,7 @@ ApplicationWindow {
                 ToolButton{ action: actions.zoomOut }
                 ToolButton{ action: actions.rotateLeft }
                 ToolButton{ action: actions.rotateRight }
+                ToolButton{ action: actions.addmarks }  //添加书签
 
                 //搜索栏
                 TextField {
@@ -90,6 +92,7 @@ ApplicationWindow {
         rotateRight.onTriggered: {
             _pdfMultiView.pageRotation += 90
        }
+       addmarks.onTriggered: Controller.addmarks()
     }
 
     Content{
