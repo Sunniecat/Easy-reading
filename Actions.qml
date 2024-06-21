@@ -18,15 +18,17 @@ Item {
     property alias zoomOriginal: _zoomOriginal
 
     //工具
-    //侧边栏
-    property alias drawerAction: _drawerAction
+    property alias drawerAction: _drawerAction //侧边栏
+    property alias selectAll: _selectAll
+    property alias copy: _copy
 
     //文件
     Action {
         id: _open
         text: "打开(O)"  //用于打开文件
         icon.name: "document-open"
-        shortcut: StandardKey.Open  //一般是Ctrl + O
+        shortcut: "Ctrl+O"
+        //StandardKey.Open  //一般是Ctrl + O"
         // onTriggered:
     }
     Action {
@@ -97,5 +99,18 @@ Item {
         // text: "侧边栏"
         icon.name: "sidebar-expand-left"
         onTriggered: content.drawer.open()
+    }
+    Action{
+        id:_selectAll
+        text:"全选"
+        icon.name: "edit-select-all-symbolic"
+        onTriggered: _pdfMultiView.selectAll()
+    }
+    Action{
+        id:_copy
+        text: "复制"
+        icon.name: "edit-copy-symbolic"
+        enabled: _pdfMultiView.selectedText !== ""
+        onTriggered: _pdfMultiView.copySelectionToClipboard()
     }
 }

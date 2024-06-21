@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Layouts
 import QtQuick.Pdf
+import QtQuick.Layouts
 
 ApplicationWindow {
     id: appwindow
@@ -10,15 +10,14 @@ ApplicationWindow {
     color: "lightgrey"
     title: "Easy reading"
     visible: true
-    property string source    //for main.cpp
 
     menuBar: MenuBar {
         Menu {
-                   title: qsTr("文件(&F)")   //可以Alt + F
-                   MenuItem { action: actions.open }
-                   MenuItem { action: actions.save }
-                   MenuItem { action: actions.about }
-               }
+            title: qsTr("文件(&F)")   //可以Alt + F
+            MenuItem { action: actions.open }
+            MenuItem { action: actions.save }
+            MenuItem { action: actions.about }
+        }
         Menu {
                    title: qsTr("视图(&V)")   //可以Alt + V
                    MenuItem { action: actions.zoomIn }  //放大(镜头拉近)
@@ -58,9 +57,27 @@ ApplicationWindow {
                     TapHandler {
                         onTapped: _searchField.clear()
                     }
-                }
-            }
         }
+                SpinBox {
+                    id: _currentPage
+                    from: 1
+                    to: content.pdfDoc.pageCount
+                    editable: true
+                    onValueModified: _pdfMultiView.goToPage(value - 1)
+                    Shortcut {
+                        sequence: "Ctrl+w"
+                        onActivated: _pdfMultiView.goToPage(_currentPage.value - 2)
+                    }
+                    Shortcut {
+                        sequence: "Ctrl+s"
+                        onActivated: _pdfMultiView.goToPage(_currentPage.value)
+                    }
+                }
+                ToolButton{action:actions.selectAll}
+                ToolButton{action:actions.copy}
+         }
+    }
+
     Actions {
         id: actions
         open.onTriggered: {
