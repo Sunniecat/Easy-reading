@@ -10,6 +10,21 @@ find_package(Qt6 6.4 REQUIRED COMPONENTS Quick)
 qt_standard_project_setup()
 
 qt_add_executable(appEasy-reading main.cpp)
+qt_add_library(recentfiles_module STATIC)
+qt_add_qml_module(
+  recentfiles_module
+  URI
+  "RecentFilesModule"
+  VERSION
+  1.0
+  QML_FILES
+  SOURCES
+  recenfiles.cpp
+  recenfiles.h
+  RESOURCE_PREFIX
+  ":/qt/qml/RecentFilesModule"
+  OUTPUT_DIRECTORY
+  /root/Qt_study/Easy-reading/build/Desktop_Qt_6_7_1-Debug/RecentFilesModule)
 
 qt_add_qml_module(
   appEasy-reading
@@ -26,7 +41,8 @@ qt_add_qml_module(
   Content.qml
   QML_FILES
   Dialogs.qml
-  QML_FILES controller.js)
+  QML_FILES
+  controller.js)
 
 target_compile_features(appEasy-reading PRIVATE cxx_std_20)
 
@@ -48,6 +64,8 @@ install(
   BUNDLE DESTINATION .
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+# install( TARGETS recentfiles_module BUNDLE DESTINATION . LIBRARY DESTINATION
+# ${CMAKE_INSTALL_LIBDIR} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 # qt_add_executable(Easy-reading)  //Creates and finalizes an application target
 # of a platform-specific type. This command performs the following tasks: 1.

@@ -7,6 +7,7 @@ Item {
     property  alias open: _open
     property alias save: _save
     property alias about: _about
+    property alias recentfiles: _recentfiles
 
     //视图
     property alias zoomIn: _zoomIn
@@ -44,6 +45,11 @@ Item {
         text: "关于"  //一些关于此阅读器的介绍等
         icon.name: "help-about"
         // onTriggered:
+    }
+    Action {
+        id: _recentfiles
+        text: "最近打开"
+        icon.name: "document-open-recent"
     }
 
     //视图

@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Dialogs
 import QtQuick.Layouts
 import QtQuick.Pdf
+import "controller.js" as Controller
 
 Item {
     property alias pdfDoc: _pdfDoc
@@ -17,6 +18,8 @@ Item {
         id:_pdfDoc
         source:"" //文件资源地址
     }
+
+
 
     //侧边栏
     Drawer {
@@ -190,6 +193,10 @@ Item {
         fileOpen.onAccepted: {
             _pdfDoc.source=fileOpen.selectedFile
             console.log(_pdfDoc.source)
+            //action about recentfiles
+            recentfiles.curFile = _pdfDoc.source
+            recentfiles.addRecentFile(recentfiles.curFile)
+            console.log("recentFiles.size:",recentfiles.size())
         }
     }
 }

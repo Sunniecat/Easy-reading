@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Pdf
 import QtQuick.Layouts
+import RecentFilesModule
 import "controller.js" as Controller
 
 ApplicationWindow {
@@ -14,23 +15,58 @@ ApplicationWindow {
 
     menuBar: MenuBar {
         Menu {
+            id: fileMenu
             title: qsTr("文件(&F)")   //可以Alt + F
             MenuItem { action: actions.open }
             MenuItem { action: actions.save }
+
+            Menu {
+                    id: recentFilesMenu
+                    title: qsTr("Recent Files")
+                    // enabled: recentFilesInstantiator.count > 0
+                    Instantiator {
+                        id: recentFilesInstantiator
+                        model: recentfiles.recentFiles
+                        delegate: MenuItem {
+                            text: recentfiles.displayableFilePath(modelData)
+                            onTriggered: {
+                                Controller.loadFile(modelData)
+                                console.log("clicked: ", modelData)
+                            }
+                        }
+                        onObjectAdded: Controller.insertMenuItem(index, object)
+
+                        onObjectRemoved: Controller.removeMenuItem(index, object)
+
+                    }
+
+                    MenuSeparator {}
+
+                    MenuItem {
+                        text: qsTr("Clear Recent Files")
+                        onTriggered:{
+                            console.log("clicked clearRecentFiles")
+                            Controller.clearAllRecentfiles()
+                        }
+
+                    }
+                }
             MenuItem { action: actions.about }
         }
         Menu {
-                   title: qsTr("视图(&V)")   //可以Alt + V
-                   MenuItem { action: actions.zoomIn }  //放大(镜头拉近)
-                   MenuItem { action: actions.zoomOut }  //缩小（拉远）
-                   MenuItem { action: actions.rotateLeft } //向左旋转
-                   MenuItem { action: actions.rotateRight } //向右旋转
-                   MenuItem { action: actions.zoomFitWidth } //适应宽度缩放
-                   MenuItem { action: actions.zoomFitBest }  //最佳缩放
-                   MenuItem { action: actions.zoomOriginal } //初始化缩放
-               }
+            id: viewMenu
+            title: qsTr("视图(&V)")   //可以Alt + V
+            MenuItem { action: actions.zoomIn }  //放大(镜头拉近)
+            MenuItem { action: actions.zoomOut }  //缩小（拉远）
+            MenuItem { action: actions.rotateLeft } //向左旋转
+            MenuItem { action: actions.rotateRight } //向右旋转
+            MenuItem { action: actions.zoomFitWidth } //适应宽度缩放
+            MenuItem { action: actions.zoomFitBest }  //最佳缩放
+            MenuItem { action: actions.zoomOriginal } //初始化缩放
+        }
 
     }
+
     header: ToolBar {
             RowLayout{
                 ToolButton{
@@ -60,6 +96,15 @@ ApplicationWindow {
                         onTapped: _searchField.clear()
                     }
         }
+             Dialog{
+                id: dia
+                Rectangle{
+                    width: 300
+                    height: 300
+                    color: "red"
+                }
+
+             }
                 SpinBox {
                     id: _currentPage
                     from: 1
@@ -93,19 +138,25 @@ ApplicationWindow {
             _pdfMultiView.pageRotation += 90
        }
        addmarks.onTriggered: Controller.addmarks()
+       // recentfiles.onTriggered: content.dialogs.dia.open()
     }
 
+    RecenFiles{
+        id: recentfiles
+        maxCount: 5
+    }
     Content{
         id:content
         anchors.fill: parent
     }
-
     //pdf多页显示类
     PdfMultiPageView{
         id:_pdfMultiView
         document: content.pdfDoc
         anchors.fill:parent
         searchString: _searchField.text
+
     }
 
 }
+
