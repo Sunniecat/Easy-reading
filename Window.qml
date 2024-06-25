@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Pdf
 import QtQuick.Layouts
+import QtTextToSpeech
+import QtMultimedia
 
 ApplicationWindow {
     id: appwindow
@@ -27,8 +29,20 @@ ApplicationWindow {
                    MenuItem { action: actions.zoomFitWidth } //适应宽度缩放
                    MenuItem { action: actions.zoomFitBest }  //最佳缩放
                    MenuItem { action: actions.zoomOriginal } //初始化缩放
+                   MenuItem { action: actions.playModel }
                }
-
+        Menu {
+            title: qsTr("工具(&T)")
+            Menu{
+                icon.name: "view-readermode-symbolic"
+                title: qsTr("有声阅读")
+                MenuItem{ action:actions.ttsSetting }
+                MenuItem{ action:actions.currentPageTts }
+                MenuItem{ action:actions.resume }
+                MenuItem{ action:actions.pause }
+                MenuItem{ action:actions.stop }
+            }
+        }
     }
     header: ToolBar {
             RowLayout{
@@ -104,5 +118,53 @@ ApplicationWindow {
         anchors.fill:parent
         searchString: _searchField.text
     }
+
+    //临时保存文本类
+    TextArea{
+        id:_selectedText
+        visible: false
+        enabled: false
+    }
+
+    //文本转语音
+    TextToSpeech{
+        id:_tts
+        volume: content.dialogs.ttsSettingDialog.volumeSlider.value //与slider绑定 下面同理
+        pitch: content.dialogs.ttsSettingDialog.pitchSlider.value
+        rate: content.dialogs.ttsSettingDialog.rateSlider.value
+
+        onStateChanged: updateStateLabel(state) //状态转换
+
+        function updateStateLabel(state) //状态函数
+        {
+            switch (state) {
+                case TextToSpeech.Ready:
+                    _statusLabel.text = qsTr("Ready to read") //判定引擎无误进入就绪态
+                    break
+                case TextToSpeech.Speaking:
+                    _statusLabel.text = qsTr("Speaking")
+                    break
+                case TextToSpeech.Paused:
+                    _statusLabel.text = qsTr("Paused...")
+                    break
+                case TextToSpeech.Error:
+                    _statusLabel.text = qsTr("Error! cannot to read")
+                    break
+            }
+        }
+
+        onSayingWord: (word, id, start, length)=> {
+
+            _selectedText.text=_pdfMultiView.selectedText
+            _selectedText.select(start, start + length)
+        }
+
+    }
+
+    footer:Label //用于显示当前阅读状态
+    {
+            id: _statusLabel
+            color: "black"
+        }
 
 }

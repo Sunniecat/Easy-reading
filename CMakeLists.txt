@@ -25,7 +25,8 @@ qt_add_qml_module(
   QML_FILES
   Content.qml
   QML_FILES
-  Dialogs.qml)
+  Dialogs.qml
+  QML_FILES )
 
 target_compile_features(appEasy-reading PRIVATE cxx_std_20)
 

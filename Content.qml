@@ -3,11 +3,14 @@ import QtQuick.Controls
 import QtQuick.Dialogs
 import QtQuick.Layouts
 import QtQuick.Pdf
+import QtTextToSpeech
 
 Item {
     property alias pdfDoc: _pdfDoc
     property alias dialogs: _dialogs
     property alias drawer: _drawer
+    signal fullScreen()
+    signal window()
 
     //pdf文件类
     PdfDocument{
@@ -170,6 +173,42 @@ Item {
             console.log(_pdfDoc.source)
         }
     }
+
+    function updateLocales() {
+        let allLocales = _tts.availableLocales().map((locale) => locale.nativeLanguageName)
+        let currentLocaleIndex = allLocales.indexOf(_tts.locale.nativeLanguageName)
+        _dialogs.ttsSettingDialog.localesComboBox.model = allLocales
+        _dialogs.ttsSettingDialog.localesComboBox.currentIndex = currentLocaleIndex
+    }
+
+    function updateVoices() {
+        _dialogs.ttsSettingDialog.voicesComboBox.model = _tts.availableVoices().map((voice) => voice.name)
+        let indexOfVoice = _tts.availableVoices().indexOf(_tts.voice)
+        _dialogs.ttsSettingDialog.voicesComboBox.currentIndex = indexOfVoice
+    }
+
+    function engineReady() {
+        _tts.stateChanged.disconnect(engineReady)
+        if (_tts.state !== TextToSpeech.Ready) {
+            _tts.updateStateLabel(_tts.state)
+            return;
+        }
+        updateLocales()
+        updateVoices()
+    }
+
+    Component.onCompleted: {
+        dialogs.ttsSettingDialog.enginesComboBox.currentIndex = _tts.availableEngines().indexOf(_tts.engine)
+        // some engines initialize asynchronously
+        if (_tts.state === TextToSpeech.Ready) {
+            engineReady()
+        } else {
+            _tts.stateChanged.connect(engineReady)
+        }
+
+        _tts.updateStateLabel(_tts.state)
+    }
+
 }
 
 
