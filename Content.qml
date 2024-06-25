@@ -3,11 +3,14 @@ import QtQuick.Controls
 import QtQuick.Dialogs
 import QtQuick.Layouts
 import QtQuick.Pdf
+import QtTextToSpeech
 
 Item {
     property alias pdfDoc: _pdfDoc
     property alias dialogs: _dialogs
     property alias drawer: _drawer
+    signal fullScreen()
+    signal window()
 
     //pdf文件类
     PdfDocument{
@@ -26,7 +29,16 @@ Item {
             id:_drawerTabBar
             transformOrigin: Item.TopRight
             TabButton{
-                text: qsTr("搜索结果")
+                text:qsTr( "目录" )
+                width: 60
+            }
+            TabButton{
+                text: qsTr( "搜索结果" )
+                width: 60
+            }
+            TabButton{
+                text:qsTr( "缩略图" )
+                width: 60
             }
         }
         GroupBox {
@@ -41,6 +53,21 @@ Item {
                     selectByMouse: true
                     readOnly: true
                     wrapMode: Text.WordWrap
+                }
+
+                //目录的显示
+                TreeView {
+                    id: _bookDirView
+                    implicitHeight: parent.height
+                    implicitWidth: parent.width
+                    columnWidthProvider: function() { return width }  //保证了目录宽度不会超过GroupBox
+                    delegate: TreeViewDelegate {
+                        onClicked: _pdfMultiView.goToLocation(page, location, zoom)
+                    }
+                    model: PdfBookmarkModel{
+                        document: pdfDoc
+                    }
+                    ScrollBar.vertical: ScrollBar{}
                 }
 
         //搜索结果的显示
@@ -86,9 +113,59 @@ Item {
                 onClicked: _pdfMultiView.searchModel.currentResult = _searchResultDelegate.index
          }
         }
-       }
+
+        //缩略图的显示
+        GridView{
+            id: _thumbNailsView
+            implicitWidth: parent.width
+            implicitHeight: parent.height
+            model: _pdfDoc.pageModel
+            cellWidth: width / 2
+            cellHeight: cellWidth + 10
+            delegate:Item {
+                required property int index
+                required property string label
+                required property size pointSize
+                width: _thumbNailsView.cellWidth
+                height: _thumbNailsView.cellHeight
+                Rectangle{
+                    id:_paper
+                    width: _image.width
+                    height: _image.height
+                    x:(parent.width-width)/2
+                    y:(parent.height-height-_pageName.height)/2
+                    PdfPageImage{
+                        id:_image
+                        document: _pdfDoc
+                        currentFrame: index
+                        asynchronous: true//表示页面渲染是异步进行的。这意味着PDF页面的渲染不会阻塞UI线程，用户界面在渲染过程中仍然可以响应用户操作。
+
+                        fillMode: Image.PreserveAspectFit//保持其宽高比的方式填充可用空间
+                        property bool landscape: pointSize.width > pointSize.height
+
+                        width: landscape ? _thumbNailsView.cellWidth - 6
+                                         : height * pointSize.width / pointSize.height
+                        height: landscape ? width * pointSize.height / pointSize.width
+                                          : _thumbNailsView.cellHeight - 14
+                        sourceSize.width: width
+                        sourceSize.height: height
+                    }
+                }
+                Text {
+                    id: _pageName
+                    anchors.bottom: parent.bottom
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text:label
+                }
+                TapHandler{
+                    onTapped: _pdfMultiView.goToPage(index)
+                }
+            }
+         }
       }
-     }
+   }
+}
+
 
     Dialogs {
         id:_dialogs
@@ -97,4 +174,42 @@ Item {
             console.log(_pdfDoc.source)
         }
     }
+
+    function updateLocales() {
+        let allLocales = _tts.availableLocales().map((locale) => locale.nativeLanguageName)
+        let currentLocaleIndex = allLocales.indexOf(_tts.locale.nativeLanguageName)
+        _dialogs.ttsSettingDialog.localesComboBox.model = allLocales
+        _dialogs.ttsSettingDialog.localesComboBox.currentIndex = currentLocaleIndex
+    }
+
+    function updateVoices() {
+        _dialogs.ttsSettingDialog.voicesComboBox.model = _tts.availableVoices().map((voice) => voice.name)
+        let indexOfVoice = _tts.availableVoices().indexOf(_tts.voice)
+        _dialogs.ttsSettingDialog.voicesComboBox.currentIndex = indexOfVoice
+    }
+
+    function engineReady() {
+        _tts.stateChanged.disconnect(engineReady)
+        if (_tts.state !== TextToSpeech.Ready) {
+            _tts.updateStateLabel(_tts.state)
+            return;
+        }
+        updateLocales()
+        updateVoices()
+    }
+
+    Component.onCompleted: {
+        dialogs.ttsSettingDialog.enginesComboBox.currentIndex = _tts.availableEngines().indexOf(_tts.engine)
+        // some engines initialize asynchronously
+        if (_tts.state === TextToSpeech.Ready) {
+            engineReady()
+        } else {
+            _tts.stateChanged.connect(engineReady)
+        }
+
+        _tts.updateStateLabel(_tts.state)
+    }
+
 }
+
+

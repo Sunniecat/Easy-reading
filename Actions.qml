@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtTextToSpeech
 
 
 Item {
@@ -7,6 +8,7 @@ Item {
     property  alias open: _open
     property alias save: _save
     property alias about: _about
+
     //视图
     property alias zoomIn: _zoomIn
     property alias zoomOut: _zoomOut
@@ -15,16 +17,25 @@ Item {
     property alias zoomFitWidth: _zoomFitWidth
     property alias zoomFitBest: _zoomFitBest
     property alias zoomOriginal: _zoomOriginal
+    property alias playModel: _playModel
+
     //工具
-    property alias drawerAction: _drawerAction
-    property alias searchResult: _searchResult
+    property alias drawerAction: _drawerAction //侧边栏
+    property alias selectAll: _selectAll
+    property alias copy: _copy
+    property alias currentPageTts: _currentPageTts
+    property alias ttsSetting: _ttsSetting
+    property alias resume: _resume
+    property alias stop: _stop
+    property alias pause: _pause
 
     //文件
     Action {
         id: _open
         text: "打开(O)"  //用于打开文件
         icon.name: "document-open"
-        shortcut: StandardKey.Open  //一般是Ctrl + O
+        shortcut: "Ctrl+O"
+        //StandardKey.Open  //一般是Ctrl + O"
         // onTriggered:
     }
     Action {
@@ -70,7 +81,6 @@ Item {
         icon.name: "object-rotate-right-symbolic"
         shortcut: "Ctrl+R"
     }
-
     Action {
         id:_zoomFitWidth
         text: "适应宽度"
@@ -89,6 +99,15 @@ Item {
         icon.name: "zoom-fit-original"
         onTriggered: _pdfMultiView.resetScale()
     }
+    Action{
+        id:_playModel
+        text: "播放模式"
+        onTriggered: fullScreen()
+    }
+    Action{
+        id:_fullScreen
+        text: "全屏模式"
+    }
 
     //工具
     Action {
@@ -102,5 +121,61 @@ Item {
     Action {
         id: _searchResult
         text: qsTr("搜索结果")
+        onTriggered: content.drawer.open()
+    }
+    Action{
+        id:_selectAll
+        text:"全选"
+        icon.name: "edit-select-all-symbolic"
+        onTriggered: _pdfMultiView.selectAll()
+    }
+    Action{
+        id:_copy
+        text: "复制"
+        icon.name: "edit-copy-symbolic"
+        enabled: _pdfMultiView.selectedText !== ""
+        onTriggered: _pdfMultiView.copySelectionToClipboard()
+    }
+    Action{
+        id:_ttsSetting
+        icon.name: "settings-configure-symbolic"
+        text: "阅读设置"
+        onTriggered: content.dialogs.ttsSettingDialog.open()
+    }
+    Action{
+        id:_currentPageTts
+        text: "阅读当前页面"
+        icon.name: "media-playback-start-symbolic"
+        enabled: [TextToSpeech.Paused, TextToSpeech.Ready].includes(_tts.state)
+        onTriggered: {
+            _pdfMultiView.selectAll()
+            if (_pdfMultiView.selectedText !== "")
+            {
+                let voices = _tts.availableVoices()
+                _tts.voice = voices[content.dialogs.ttsSettingDialog.voicesComboBox.currentIndex]
+                _tts.say(_pdfMultiView.selectedText)
+            }
+        }
+    }
+    Action{
+        id:_resume
+        text:"继续"
+        icon.name: "media-playback-playing-symbolic"
+        enabled: _tts.state == TextToSpeech.Paused
+        onTriggered: _tts.resume()
+    }
+    Action{
+        id:_stop
+        text:"停止"
+        icon.name: "media-playback-stop-symbolic"
+        enabled: [TextToSpeech.Speaking, TextToSpeech.Paused].includes(_tts.state)
+        onTriggered: _tts.stop()
+    }
+    Action{
+        id:_pause
+        text:"暂停"
+        icon.name: "media-playback-paused-symbolic"
+        enabled: _tts.state == TextToSpeech.Speaking
+        onTriggered: _tts.pause()
     }
 }
