@@ -1,20 +1,18 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include "recenfiles.h"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
-    const QUrl url(QStringLiteral("qrc:/Easy-reading/Window.qml"));
     QObject::connect(
         &engine,
         &QQmlApplicationEngine::objectCreationFailed,
         &app,
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
-    engine.load(url);
+    engine.loadFromModule("recentfiles", "Window");
 
     return app.exec();
 }

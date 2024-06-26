@@ -35,6 +35,7 @@ signals:
     void curFileChanged();
 
 private:
+    //
     QString m_curFile;
     QStringList m_recentFiles;
     int m_maxCount;

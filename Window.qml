@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Pdf
 import QtQuick.Layouts
-import RecentFilesModule
+import recentfiles
 import "controller.js" as Controller
 import QtTextToSpeech
 import QtMultimedia
@@ -158,7 +158,7 @@ ApplicationWindow {
 
     RecenFiles{
         id: recentfiles
-        maxCount: 5
+        maxCount: 10
     }
     Content{
         id:content

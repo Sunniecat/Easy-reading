@@ -10,31 +10,18 @@ find_package(Qt6 6.4 REQUIRED COMPONENTS Quick)
 qt_standard_project_setup()
 
 qt_add_executable(appEasy-reading main.cpp)
-qt_add_library(recentfiles_module STATIC)
-qt_add_qml_module(
-  recentfiles_module
-  URI
-  "RecentFilesModule"
-  VERSION
-  1.0
-  QML_FILES
-  SOURCES
-  recenfiles.cpp
-  recenfiles.h
-  RESOURCE_PREFIX
-  ":/qt/qml/RecentFilesModule"
-  OUTPUT_DIRECTORY
-  /root/Qt_study/Easy-reading/build/Desktop_Qt_6_7_1-Debug/RecentFilesModule)
 
 qt_add_qml_module(
   appEasy-reading
   URI
-  Easy-reading
+  "recentfiles"
   VERSION
   1.0
   QML_FILES
   Window.qml
   SOURCES
+  recenfiles.cpp
+  recenfiles.h
   QML_FILES
   Actions.qml
   QML_FILES

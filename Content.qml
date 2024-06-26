@@ -203,7 +203,6 @@ Item {
 
     Component.onCompleted: {
         dialogs.ttsSettingDialog.enginesComboBox.currentIndex = _tts.availableEngines().indexOf(_tts.engine)
-        // some engines initialize asynchronously
         if (_tts.state === TextToSpeech.Ready) {
             Controller.engineReady()
         } else {
