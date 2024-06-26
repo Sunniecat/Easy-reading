@@ -4,6 +4,7 @@ import QtQuick.Dialogs
 import QtQuick.Layouts
 import QtQuick.Pdf
 import "controller.js" as Controller
+import QtTextToSpeech
 
 Item {
     property alias pdfDoc: _pdfDoc
@@ -12,14 +13,14 @@ Item {
     //侧边栏里
     property alias bookmarksview: _bookmarksview
     property alias marksModel: _marksModel
+    signal fullScreen()
+    signal window()
 
     //pdf文件类
     PdfDocument{
         id:_pdfDoc
         source:"" //文件资源地址
     }
-
-
 
     //侧边栏
     Drawer {
@@ -199,6 +200,19 @@ Item {
             console.log("recentFiles.size:",recentfiles.size())
         }
     }
+
+    Component.onCompleted: {
+        dialogs.ttsSettingDialog.enginesComboBox.currentIndex = _tts.availableEngines().indexOf(_tts.engine)
+        // some engines initialize asynchronously
+        if (_tts.state === TextToSpeech.Ready) {
+            Controller.engineReady()
+        } else {
+            _tts.stateChanged.connect(Controller.engineReady)
+        }
+
+        _tts.updateStateLabel(_tts.state)
+    }
+
 }
 
 
