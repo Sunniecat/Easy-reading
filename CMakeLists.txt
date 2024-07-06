@@ -29,7 +29,8 @@ qt_add_qml_module(
   QML_FILES
   Dialogs.qml
   QML_FILES
-  controller.js)
+  controller.js
+  QML_FILES Begining.qml)
 
 target_compile_features(appEasy-reading PRIVATE cxx_std_20)
 

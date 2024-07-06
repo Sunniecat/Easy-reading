@@ -55,6 +55,7 @@ ApplicationWindow {
                     }
                 }
             MenuItem { action: actions.about }
+            MenuItem { action: actions.closefile }
         }
         Menu {
             id: viewMenu
@@ -111,16 +112,7 @@ ApplicationWindow {
                     TapHandler {
                         onTapped: _searchField.clear()
                     }
-        }
-             Dialog{
-                id: dia
-                Rectangle{
-                    width: 300
-                    height: 300
-                    color: "red"
                 }
-
-             }
                 SpinBox {
                     id: _currentPage
                     from: 1
@@ -146,6 +138,8 @@ ApplicationWindow {
         open.onTriggered: {
             content.dialogs.fileOpen.open()
         }
+        closefile.onTriggered: Controller.closefile()
+        //view part
         rotateLeft.onTriggered: {
             _pdfMultiView.pageRotation -= 90
 
@@ -164,15 +158,21 @@ ApplicationWindow {
         id:content
         anchors.fill: parent
     }
-    //pdf多页显示类
-    PdfMultiPageView{
-        id:_pdfMultiView
-        document: content.pdfDoc
-        anchors.fill:parent
-        searchString: _searchField.text
-
+    Rectangle{
+        id: twoview
+        anchors.fill: parent
+        color: "lightgrey"
+        Begining{
+            id: beginview
+        }
+        PdfMultiPageView{
+            id:_pdfMultiView
+            document: content.pdfDoc
+            anchors.fill:twoview
+            searchString: _searchField.text
+            // z:1
+        }
     }
-
     //临时保存文本类
     TextArea{
         id:_selectedText

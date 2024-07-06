@@ -9,6 +9,7 @@ Item {
     property alias save: _save
     property alias about: _about
     property alias recentfiles: _recentfiles
+    property alias closefile: _closefile
 
     //视图
     property alias zoomIn: _zoomIn
@@ -55,6 +56,11 @@ Item {
         id: _recentfiles
         text: "最近打开"
         icon.name: "document-open-recent"
+    }
+    Action {
+        id: _closefile
+        text: "关闭文件"
+        icon.name: "document-close"
     }
 
     //视图

@@ -198,6 +198,8 @@ Item {
             recentfiles.curFile = _pdfDoc.source
             recentfiles.addRecentFile(recentfiles.curFile)
             console.log("recentFiles.size:",recentfiles.size())
+            _pdfMultiView.visible = true
+            beginview.visible = false
         }
     }
 

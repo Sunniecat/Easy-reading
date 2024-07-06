@@ -9,6 +9,8 @@ function loadFile(filepath)
 {
     content.pdfDoc.source = filepath
     console.log("filepath", filepath)
+    _pdfMultiView.visible = true
+    beginview.visible = false
 }
 function addrecentfiles()
 {
@@ -25,11 +27,10 @@ function insertMenuItem(index, object)
     console.log("insert index: ", index)
     console.log("object: ", object.text)
 }
-function removetMenuItem(index, object)
+function removeMenuItem(index, object)
 {
     recentFilesMenu.removeItem(object)
     console.log("remove index: ", index)
-    // console.log("object: ", object.text)
 }
 
 function clearAllRecentfiles()
@@ -39,12 +40,21 @@ function clearAllRecentfiles()
     for(i; i >= 0; i--)
     {
         object = recentFilesInstantiator.objectAt(i)
-        removetMenuItem(i, object)
+        removeMenuItem(i, object)
     }
     console.log()
-    recentfiles.clear("recentFilesInstantiator.count:",recentFilesInstantiator.count)
+    recentfiles.clear()
     console.log("recentFiles.size:",recentfiles.size())
 }
+
+//close file
+function closefile()
+{
+    _pdfMultiView.visible = false
+    beginview.visible = true
+    console.log("closefile",_pdfMultiView.document)
+}
+
 //text to speech
 function updateLocales() {
     let allLocales = _tts.availableLocales().map((locale) => locale.nativeLanguageName)
