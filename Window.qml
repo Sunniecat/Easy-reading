@@ -26,6 +26,7 @@ ApplicationWindow {
             Menu {
                     id: recentFilesMenu
                     title: qsTr("Recent Files")
+                    icon.name: "document-open-recent"
                     // enabled: recentFilesInstantiator.count > 0
                     Instantiator {
                         id: recentFilesInstantiator
@@ -33,8 +34,9 @@ ApplicationWindow {
                         delegate: MenuItem {
                             text: recentfiles.displayableFilePath(modelData)
                             onTriggered: {
-                                Controller.loadFile(modelData)
-                                console.log("clicked: ", modelData)
+                                let filepath = modelData
+                                Controller.loadFile(filepath)
+                                console.log("clicked: ", filepath)
                             }
                         }
                         onObjectAdded: Controller.insertMenuItem(index, object)
@@ -135,9 +137,9 @@ ApplicationWindow {
 
     Actions {
         id: actions
-        open.onTriggered: {
-            content.dialogs.fileOpen.open()
-        }
+        //file part
+        open.onTriggered: Controller.openfile()
+
         closefile.onTriggered: Controller.closefile()
         //view part
         rotateLeft.onTriggered: {
@@ -164,13 +166,14 @@ ApplicationWindow {
         color: "lightgrey"
         Begining{
             id: beginview
+            visible: true
         }
         PdfMultiPageView{
             id:_pdfMultiView
             document: content.pdfDoc
             anchors.fill:twoview
             searchString: _searchField.text
-            // z:1
+            visible: false
         }
     }
     //临时保存文本类

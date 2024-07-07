@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import QtQuick.Pdf
 import "controller.js" as Controller
 import QtTextToSpeech
+import recentfiles
 
 Item {
     property alias pdfDoc: _pdfDoc
@@ -191,16 +192,6 @@ Item {
 
     Dialogs {
         id:_dialogs
-        fileOpen.onAccepted: {
-            _pdfDoc.source=fileOpen.selectedFile
-            console.log(_pdfDoc.source)
-            //action about recentfiles
-            recentfiles.curFile = _pdfDoc.source
-            recentfiles.addRecentFile(recentfiles.curFile)
-            console.log("recentFiles.size:",recentfiles.size())
-            _pdfMultiView.visible = true
-            beginview.visible = false
-        }
     }
 
     Component.onCompleted: {

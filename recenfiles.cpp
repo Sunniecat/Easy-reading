@@ -93,3 +93,10 @@ QString RecenFiles::displayableFilePath(const QString &filePath) const
     //return the name of the file( it doesn't include the path)
     return fileInfo.fileName();
 }
+
+void RecenFiles::remove(int index)
+{
+    QSettings settings;
+    m_recentFiles.removeAt(index);                   //remove the data at index
+    settings.setValue("recentFiles", m_recentFiles); //update settings
+}

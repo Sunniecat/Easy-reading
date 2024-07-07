@@ -20,6 +20,7 @@ public:
     Q_INVOKABLE int size() const;
     Q_INVOKABLE void clear();
     Q_INVOKABLE QString displayableFilePath(const QString &filePath) const;
+    Q_INVOKABLE void remove(int index);
     QStringList recentFiles();
     void setRecentFiles(const QStringList &newRecentFiles);
     int maxCount() const;
@@ -36,6 +37,7 @@ signals:
 
 private:
     //
+    // QSettings settings;
     QString m_curFile;
     QStringList m_recentFiles;
     int m_maxCount;

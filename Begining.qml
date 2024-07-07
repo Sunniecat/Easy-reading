@@ -1,9 +1,12 @@
+//this part is the initial content of the interface, and the content displayed after the file closed
+//it can open a new file or open a recent file or clear all recent files
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import "controller.js" as Controller
 
 Rectangle{
+    property alias recentfileslist: _recentfileslist
     color: "lightgrey"
     anchors.horizontalCenter: parent.horizontalCenter
     anchors.verticalCenter: parent.verticalCenter
@@ -47,12 +50,17 @@ Rectangle{
             font.pointSize: 10
             height: 30
             width: 100
-            Rectangle{color: "grey"}
+            background: Rectangle{
+                color: "lightgrey"
+                border.color: "grey"
+                border.width: 1
+            }
             anchors.bottom: txt.bottom
+            onClicked: Controller.openfile()
         }
     }
     Rectangle{
-        id: rightpart
+        id: rightpart  //it is used to show the text of right part, include "最近打开" and "清楚所有"
         width: parent.width*0.65
         height: 60
         color: "lightgrey"
@@ -65,13 +73,20 @@ Rectangle{
             anchors.leftMargin: 8
             anchors.verticalCenter: parent.verticalCenter
         }
-        Text {
+        Button{
+            icon.name: "edit-clear-history"
             text: qsTr("清楚所有")
-            fontSizeMode: Text.FixedSize
-            font.pointSize: 13
+            font.pointSize: 10
+            height: 30
+            width: 100
             anchors.right: parent.right
             anchors.rightMargin: 8
             anchors.verticalCenter: parent.verticalCenter
+            background: Rectangle{color: "lightgrey"}
+            onClicked: {
+                Controller.clearAllRecentfiles()
+                console.log("clear recentfiles list, count: ", recentfileslist.count)
+            }
         }
     }
     Rectangle{
@@ -83,18 +98,42 @@ Rectangle{
         border.color: "grey"
         border.width: 1
         ListView{
-            id: recentfileslist
+            id: _recentfileslist
             height: parent.height
             width: parent.width
             model: recentfiles.recentFiles
             delegate: MenuItem {
                 text: recentfiles.displayableFilePath(modelData)
                 onTriggered: {
-                    Controller.loadFile(modelData)
-                    console.log("clicked: ", modelData)
+                    let filepath = modelData
+                    Controller.loadFile(filepath)
+                    console.log("clicked: ", filepath)
+                }
+                TapHandler{
+                    acceptedButtons: Qt.RightButton
+                    onTapped: {
+                        console.log("cliced rightbutton")
+                        recentfileslist.currentIndex = index
+                        console.log("recentfileslist.currentIndex: ", recentfileslist.currentIndex)
+                        console.log("index: ", index)
+                        rightbuttonMenu.popup()
+                    }
                 }
             }
+        }  //ListView finish
 
+        Menu{
+            id: rightbuttonMenu  //click the right button of mouse on recent file, then pop up a menu
+            MenuItem{
+                text: "忘记此项(F)"
+                icon.name: "edit-clear-history"
+                onTriggered: {
+                    console.log("clicked 忘记此项")
+                    let index = recentfileslist.currentIndex
+                    Controller.removeRecentfile(index)
+                    console.log("forget index: ", index)
+                }
+            }
         }
 
     }
