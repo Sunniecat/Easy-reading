@@ -17,8 +17,7 @@ RecenFiles::RecenFiles(QStringList recenfs, int maxcount)
 //setter/getter
 QStringList RecenFiles::recentFiles()
 {
-    QSettings settings;
-    m_recentFiles = settings.value("recentFiles").toStringList();
+    m_recentFiles = m_settings.value("recentFiles").toStringList();
     return m_recentFiles;
 }
 
@@ -26,10 +25,9 @@ void RecenFiles::setRecentFiles(const QStringList &newRecentFiles)
 {
     if (m_recentFiles == newRecentFiles)
         return;
-    QSettings settings;
     m_recentFiles = newRecentFiles;
-    settings.setValue("recentFiles",
-                      m_recentFiles); //if recentfiles changed, then settings should changed too
+    m_settings.setValue("recentFiles",
+                        m_recentFiles); //if recentfiles changed, then settings should changed too
     emit recentFilesChanged();
 }
 
@@ -61,7 +59,6 @@ void RecenFiles::setCurFile(const QString &newCurFile)
 
 void RecenFiles::addRecentFile(const QString &filepath)
 {
-    QSettings settings; //-->settings是全局单例对象
     //先获取setting中原本就有的recentfiles list
     m_recentFiles = recentFiles();
     //Removes all elements that compare equal to t from the list. Returns the number of elements removed, if any.
@@ -70,7 +67,7 @@ void RecenFiles::addRecentFile(const QString &filepath)
     while (m_recentFiles.size() > m_maxCount)
         m_recentFiles.removeLast(); //Removes the last item in the list.
     //Sets the value of setting key to value. If the key already exists, the previous value is overwritten.
-    settings.setValue("recentFiles", m_recentFiles);
+    m_settings.setValue("recentFiles", m_recentFiles);
     emit recentFilesChanged();
 }
 
@@ -81,9 +78,9 @@ int RecenFiles::size() const
 
 void RecenFiles::clear()
 {
-    QSettings settings;
-    settings.clear();
+    // m_settings.clear();
     m_recentFiles.clear();
+    m_settings.setValue("recentFiles", m_recentFiles); //update settings
 }
 
 QString RecenFiles::displayableFilePath(const QString &filePath) const
@@ -96,7 +93,6 @@ QString RecenFiles::displayableFilePath(const QString &filePath) const
 
 void RecenFiles::remove(int index)
 {
-    QSettings settings;
     m_recentFiles.removeAt(index);                   //remove the data at index
-    settings.setValue("recentFiles", m_recentFiles); //update settings
+    m_settings.setValue("recentFiles", m_recentFiles); //update settings
 }

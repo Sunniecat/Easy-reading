@@ -19,7 +19,7 @@ ApplicationWindow {
     menuBar: MenuBar {
         Menu {
             id: fileMenu
-            title: qsTr("文件(&F)")   //可以Alt + F
+            title: qsTr("File(&F)")   //Alt + F
             MenuItem { action: actions.open }
             MenuItem { action: actions.save }
 
@@ -61,22 +61,22 @@ ApplicationWindow {
         }
         Menu {
             id: viewMenu
-            title: qsTr("视图(&V)")   //可以Alt + V
-            MenuItem { action: actions.zoomIn }  //放大(镜头拉近)
-            MenuItem { action: actions.zoomOut }  //缩小（拉远）
-            MenuItem { action: actions.rotateLeft } //向左旋转
-            MenuItem { action: actions.rotateRight } //向右旋转
-            MenuItem { action: actions.zoomFitWidth } //适应宽度缩放
-            MenuItem { action: actions.zoomFitBest }  //最佳缩放
-            MenuItem { action: actions.zoomOriginal } //初始化缩放
+            title: qsTr("View(&V)")   //Alt + V
+            MenuItem { action: actions.zoomIn }
+            MenuItem { action: actions.zoomOut }
+            MenuItem { action: actions.rotateLeft }
+            MenuItem { action: actions.rotateRight }
+            MenuItem { action: actions.zoomFitWidth }
+            MenuItem { action: actions.zoomFitBest }
+            MenuItem { action: actions.zoomOriginal }
             MenuItem { action: actions.playModel }
         }
 
         Menu {
-            title: qsTr("工具(&T)")
+            title: qsTr("Tools(&T)")
             Menu{
                 icon.name: "view-readermode-symbolic"
-                title: qsTr("有声阅读")
+                title: qsTr("Audio reading")
                 MenuItem{ action:actions.ttsSetting }
                 MenuItem{ action:actions.currentPageTts }
                 MenuItem{ action:actions.resume }
@@ -92,18 +92,18 @@ ApplicationWindow {
                     action: actions.drawerAction
                     ToolTip.visible: enabled && hovered
                     ToolTip.delay: 2000
-                    ToolTip.text: "打开边栏"
+                    ToolTip.text: "openSidebar"
                 }
                 ToolButton{ action: actions.zoomIn }
                 ToolButton{ action: actions.zoomOut }
                 ToolButton{ action: actions.rotateLeft }
                 ToolButton{ action: actions.rotateRight }
-                ToolButton{ action: actions.addmarks }  //添加书签
+                ToolButton{ action: actions.addmarks }
 
-                //搜索栏
+                //Search bar
                 TextField {
                     id: _searchField
-                    placeholderText: "搜索"
+                    placeholderText: "search"
                     Layout.minimumWidth: 200
                     Layout.fillWidth: true
                     Layout.bottomMargin: 3
@@ -176,27 +176,27 @@ ApplicationWindow {
             visible: false
         }
     }
-    //临时保存文本类
+    //Temporarily save text”
     TextArea{
         id:_selectedText
         visible: false
         enabled: false
     }
 
-    //文本转语音
+    //Text-to-speech
     TextToSpeech{
         id:_tts
-        volume: content.dialogs.ttsSettingDialog.volumeSlider.value //与slider绑定 下面同理
+        volume: content.dialogs.ttsSettingDialog.volumeSlider.value //Bound to the slider, the same applies below
         pitch: content.dialogs.ttsSettingDialog.pitchSlider.value
         rate: content.dialogs.ttsSettingDialog.rateSlider.value
 
-        onStateChanged: updateStateLabel(state) //状态转换
+        onStateChanged: updateStateLabel(state) //State transition
 
-        function updateStateLabel(state) //状态函数
+        function updateStateLabel(state) //state function
         {
             switch (state) {
                 case TextToSpeech.Ready:
-                    _statusLabel.text = qsTr("Ready to read") //判定引擎无误进入就绪态
+                    _statusLabel.text = qsTr("Ready to read") //Judge engine enters ready state without error.
                     break
                 case TextToSpeech.Speaking:
                     _statusLabel.text = qsTr("Speaking")
@@ -218,7 +218,7 @@ ApplicationWindow {
 
     }
 
-    footer:Label //用于显示当前阅读状态
+    footer:Label //Used to display the current reading status
     {
             id: _statusLabel
             color: "black"

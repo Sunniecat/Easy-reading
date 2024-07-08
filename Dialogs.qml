@@ -9,7 +9,7 @@ Item {
     property alias fileOpen: _fileOpen
     property alias ttsSettingDialog: _ttsSettingDialog
 
-    //打开pdf文件窗口
+    //open a window to choose a pdf file
     FileDialog{
         id: _fileOpen
         title: "Open a PDF file"
@@ -42,7 +42,7 @@ Item {
                 model: _tts.availableEngines()
                 onActivated: {
                     _tts.engine = textAt(currentIndex)
-                    Controller.updateLocales() //实时更新选项
+                    Controller.updateLocales() //Real-time Update Options
                     Controller.updateVoices()
                 }
             }
@@ -56,7 +56,7 @@ Item {
                 onActivated: {
                     let locales = _tts.availableLocales()
                     _tts.locale = locales[currentIndex]
-                    Controller.updateVoices() //实时更新选项
+                    Controller.updateVoices() //Real-time Update Options
                 }
             }
             Text {

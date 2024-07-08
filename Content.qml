@@ -12,20 +12,20 @@ Item {
     property alias pdfDoc: _pdfDoc
     property alias dialogs: _dialogs
     property alias drawer: _drawer
-    //侧边栏里
+    //in sidebar
     property alias bookmarksview: _bookmarksview
     property alias bookmarks: _bookmarks
     // property alias marksModel: _marksModel
     signal fullScreen()
     signal window()
 
-    //pdf文件类
+    //pdf document
     PdfDocument{
         id:_pdfDoc
-        source:"" //文件资源地址
+        source:""
     }
 
-    //侧边栏
+    //sidebar
     Drawer {
         id: _drawer
         width: 300
@@ -36,19 +36,19 @@ Item {
             id:_drawerTabBar
             transformOrigin: Item.TopRight
             TabButton{
-                text:qsTr( "目录" )
+                text:qsTr( "catalogue" )
                 width: 60
             }
             TabButton{
-                text: qsTr( "搜索结果" )
+                text: qsTr( "searchResult" )
                 width: 60
             }
             TabButton{
-                text:qsTr( "缩略图" )
+                text:qsTr( "thumbnail" )
                 width: 60
             }
             TabButton{
-                text:qsTr( "书签" )
+                text:qsTr( "marks" )
                 width: 60
             }
         }
@@ -66,7 +66,7 @@ Item {
                     wrapMode: Text.WordWrap
                 }
 
-                //目录的显示
+                //catalogue view
                 TreeView {
                     id: _bookDirView
                     implicitHeight: parent.height
@@ -81,7 +81,7 @@ Item {
                     ScrollBar.vertical: ScrollBar{}
                 }
 
-        //搜索结果的显示
+        //searchResult view
         ListView {
             id: _searchResultsList
             implicitHeight: parent.height
@@ -125,7 +125,7 @@ Item {
          }
         }
 
-        //缩略图的显示
+        //thumbnail view
         GridView{
             id: _thumbNailsView
             implicitWidth: parent.width
@@ -149,9 +149,11 @@ Item {
                         id:_image
                         document: _pdfDoc
                         currentFrame: index
-                        asynchronous: true//表示页面渲染是异步进行的。这意味着PDF页面的渲染不会阻塞UI线程，用户界面在渲染过程中仍然可以响应用户操作。
+                        //The page rendering is asynchronous, which means that the rendering of the PDF page will not block the UI thread.
+                        //The user interface remains responsive to user actions during the rendering process.
+                        asynchronous: true
 
-                        fillMode: Image.PreserveAspectFit//保持其宽高比的方式填充可用空间
+                        fillMode: Image.PreserveAspectFit//Fill the available space while maintaining its aspect ratio
                         property bool landscape: pointSize.width > pointSize.height
 
                         width: landscape ? _thumbNailsView.cellWidth - 6
@@ -188,7 +190,7 @@ Item {
             delegate: MenuItem{
                 text: bookmarks.displayMark(modelData)
                 onTriggered: {
-                    _pdfMultiView.goToPage(modelData - 1)  //bookmarks里保存的页数是从1开始的，而这里跳转，是从0开始的
+                    _pdfMultiView.goToPage(modelData - 1)
                 }
                 TapHandler{
                     acceptedButtons: Qt.RightButton
@@ -204,7 +206,7 @@ Item {
             id: marksOption  //some function abou marks
             MenuItem{
                 id: _removeMark
-                text: qsTr("移除书签")
+                text: qsTr("removeMark")
                 icon.name: "bookmark-remove"
                 onTriggered: {
                     let index = bookmarksview.currentIndex
@@ -213,7 +215,7 @@ Item {
             }
             MenuItem{
                 id: _goToMark
-                text: qsTr(" 跳转到此书签")
+                text: qsTr("jump to the mark")
                 onTriggered: {
                     var index = bookmarksview.currentIndex
                     var page = bookmarksview.model[index]
@@ -223,7 +225,7 @@ Item {
             }
             MenuItem{
                 id: _clearMarks
-                text: qsTr("删除所有书签")
+                text: qsTr("clearAll")
                 icon.name: "edit-clear-history"
                 onTriggered: Controller.clearAllMarks()
             }
