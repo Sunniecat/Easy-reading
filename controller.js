@@ -33,6 +33,7 @@ function loadFile(filepath)
     content.bookmarksview.model = content.bookmarks.marksList
     _pdfMultiView.visible = true
     beginview.visible = false
+    _pdfMultiView.gotopage(_setting.previouspage)
 }
 
 function insertMenuItem(index, object)
@@ -76,6 +77,7 @@ function closefile()
     _pdfMultiView.visible = false
     beginview.visible = true
     console.log("closefile",_pdfMultiView.document.source)
+    _setting.previouspage=_pdfMultiView.currentPage
 }
 
 //book marks part

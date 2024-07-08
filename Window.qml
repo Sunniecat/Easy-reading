@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Pdf
 import QtQuick.Layouts
+import Qt.labs.settings
 // import recentfiles
 import myModule
 import "controller.js" as Controller
@@ -15,7 +16,14 @@ ApplicationWindow {
     color: "lightgrey"
     title: "Easy reading"
     visible: true
-
+    Component.onDestruction: {
+        _setting.previouspage=_pdfMultiView.currentPage
+        console.log("page=",_setting.previouspage)
+    }
+    Settings{
+        id:_setting
+        property int previouspage: _pdfMultiView.currentPage
+    }
     menuBar: MenuBar {
         Menu {
             id: fileMenu
@@ -25,37 +33,37 @@ ApplicationWindow {
 
             //recentfiles part
             Menu {
-                    id: recentFilesMenu
-                    title: qsTr("Recent Files")
-                    icon.name: "document-open-recent"
-                    Instantiator {
-                        id: recentFilesInstantiator
-                        model: recentfiles.recentFiles
-                        delegate: MenuItem {
-                            text: recentfiles.displayableFilePath(modelData)
-                            onTriggered: {
-                                let filepath = modelData
-                                Controller.loadFile(filepath)
-                                console.log("clicked: ", filepath)
-                            }
+                id: recentFilesMenu
+                title: qsTr("Recent Files")
+                icon.name: "document-open-recent"
+                Instantiator {
+                    id: recentFilesInstantiator
+                    model: recentfiles.recentFiles
+                    delegate: MenuItem {
+                        text: recentfiles.displayableFilePath(modelData)
+                        onTriggered: {
+                            let filepath = modelData
+                            Controller.loadFile(filepath)
+                            console.log("clicked: ", filepath)
                         }
-                        onObjectAdded: Controller.insertMenuItem(index, object)
-
-                        onObjectRemoved: Controller.removeMenuItem(index, object)
-
                     }
+                    onObjectAdded: Controller.insertMenuItem(index, object)
 
-                    MenuSeparator {}
+                    onObjectRemoved: Controller.removeMenuItem(index, object)
 
-                    MenuItem {
-                        text: qsTr("Clear Recent Files")
-                        onTriggered:{
-                            console.log("clicked clearRecentFiles")
-                            Controller.clearAllRecentfiles()
-                        }
-
-                    }
                 }
+
+                MenuSeparator {}
+
+                MenuItem {
+                    text: qsTr("Clear Recent Files")
+                    onTriggered:{
+                        console.log("clicked clearRecentFiles")
+                        Controller.clearAllRecentfiles()
+                    }
+
+                }
+            }
             MenuItem { action: actions.about }
             MenuItem { action: actions.closefile }
         }
@@ -87,52 +95,52 @@ ApplicationWindow {
     }
 
     header: ToolBar {
-            RowLayout{
-                ToolButton{
-                    action: actions.drawerAction
-                    ToolTip.visible: enabled && hovered
-                    ToolTip.delay: 2000
-                    ToolTip.text: "打开边栏"
-                }
-                ToolButton{ action: actions.zoomIn }
-                ToolButton{ action: actions.zoomOut }
-                ToolButton{ action: actions.rotateLeft }
-                ToolButton{ action: actions.rotateRight }
-                ToolButton{ action: actions.addmarks }  //添加书签
+        RowLayout{
+            ToolButton{
+                action: actions.drawerAction
+                ToolTip.visible: enabled && hovered
+                ToolTip.delay: 2000
+                ToolTip.text: "打开边栏"
+            }
+            ToolButton{ action: actions.zoomIn }
+            ToolButton{ action: actions.zoomOut }
+            ToolButton{ action: actions.rotateLeft }
+            ToolButton{ action: actions.rotateRight }
+            ToolButton{ action: actions.addmarks }  //添加书签
 
-                //搜索栏
-                TextField {
-                    id: _searchField
-                    placeholderText: "搜索"
-                    Layout.minimumWidth: 200
-                    Layout.fillWidth: true
-                    Layout.bottomMargin: 3
-                    onAccepted: {
-                        content.drawer.open()
-                        content.drawer.drawerTabBar.setCurrentIndex(1)
-                    }
-                    TapHandler {
-                        onTapped: _searchField.clear()
-                    }
+            //搜索栏
+            TextField {
+                id: _searchField
+                placeholderText: "搜索"
+                Layout.minimumWidth: 200
+                Layout.fillWidth: true
+                Layout.bottomMargin: 3
+                onAccepted: {
+                    content.drawer.open()
+                    content.drawer.drawerTabBar.setCurrentIndex(1)
                 }
-                SpinBox {
-                    id: _currentPage
-                    from: 1
-                    to: content.pdfDoc.pageCount
-                    editable: true
-                    onValueModified: _pdfMultiView.goToPage(value - 1)
-                    Shortcut {
-                        sequence: "Ctrl+w"
-                        onActivated: _pdfMultiView.goToPage(_currentPage.value - 2)
-                    }
-                    Shortcut {
-                        sequence: "Ctrl+s"
-                        onActivated: _pdfMultiView.goToPage(_currentPage.value)
-                    }
+                TapHandler {
+                    onTapped: _searchField.clear()
                 }
-                ToolButton{action:actions.selectAll}
-                ToolButton{action:actions.copy}
-         }
+            }
+            SpinBox {
+                id: _currentPage
+                from: 1
+                to: content.pdfDoc.pageCount
+                editable: true
+                onValueModified: _pdfMultiView.goToPage(value - 1)
+                Shortcut {
+                    sequence: "Ctrl+w"
+                    onActivated: _pdfMultiView.goToPage(_currentPage.value - 2)
+                }
+                Shortcut {
+                    sequence: "Ctrl+s"
+                    onActivated: _pdfMultiView.goToPage(_currentPage.value)
+                }
+            }
+            ToolButton{action:actions.selectAll}
+            ToolButton{action:actions.copy}
+        }
     }
 
     Actions {
@@ -145,11 +153,11 @@ ApplicationWindow {
         rotateLeft.onTriggered: {
             _pdfMultiView.pageRotation -= 90
 
-       }
+        }
         rotateRight.onTriggered: {
             _pdfMultiView.pageRotation += 90
-       }
-       addmarks.onTriggered: Controller.addmarks()
+        }
+        addmarks.onTriggered: Controller.addmarks()
     }
 
     RecenFiles{
@@ -195,34 +203,34 @@ ApplicationWindow {
         function updateStateLabel(state) //状态函数
         {
             switch (state) {
-                case TextToSpeech.Ready:
-                    _statusLabel.text = qsTr("Ready to read") //判定引擎无误进入就绪态
-                    break
-                case TextToSpeech.Speaking:
-                    _statusLabel.text = qsTr("Speaking")
-                    break
-                case TextToSpeech.Paused:
-                    _statusLabel.text = qsTr("Paused...")
-                    break
-                case TextToSpeech.Error:
-                    _statusLabel.text = qsTr("Error! cannot to read")
-                    break
+            case TextToSpeech.Ready:
+                _statusLabel.text = qsTr("Ready to read") //判定引擎无误进入就绪态
+                break
+            case TextToSpeech.Speaking:
+                _statusLabel.text = qsTr("Speaking")
+                break
+            case TextToSpeech.Paused:
+                _statusLabel.text = qsTr("Paused...")
+                break
+            case TextToSpeech.Error:
+                _statusLabel.text = qsTr("Error! cannot to read")
+                break
             }
         }
 
         onSayingWord: (word, id, start, length)=> {
 
-            _selectedText.text=_pdfMultiView.selectedText
-            _selectedText.select(start, start + length)
-        }
+                          _selectedText.text=_pdfMultiView.selectedText
+                          _selectedText.select(start, start + length)
+                      }
 
     }
 
     footer:Label //用于显示当前阅读状态
     {
-            id: _statusLabel
-            color: "black"
-        }
+        id: _statusLabel
+        color: "black"
+    }
 
 }
 
