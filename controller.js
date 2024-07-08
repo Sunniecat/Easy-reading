@@ -1,8 +1,3 @@
-
-function addmarks() {
-    content.marksModel.append({name: "page", value: _pdfMultiView.currentPage})
-    console.log(_pdfMultiView.currentPage)
-}
 //open file part
 function openfile()
 {
@@ -16,9 +11,12 @@ function openfile()
                 recentfiles.curFile = content.pdfDoc.source
                 recentfiles.addRecentFile(recentfiles.curFile)
                 beginview.recentfileslist.model = recentfiles.recentFiles  //update the recentfileslist after open a new file
+                //everytime we open a new file, the curFile of BookMarks changed, then the bookmarksview's model should change too
+                content.bookmarks.curFile = content.pdfDoc.source
+                content.bookmarksview.model = content.bookmarks.marksList
                 _pdfMultiView.visible = true
                 beginview.visible = false
-                console.log("clear  list, count: ", beginview.recentfileslist.count)
+                console.log("recentfileslist count: ", beginview.recentfileslist.count)
             })
     content.dialogs.fileOpen.open()
 }
@@ -30,6 +28,9 @@ function loadFile(filepath)
     recentfiles.curFile = content.pdfDoc.source
     recentfiles.addRecentFile(recentfiles.curFile)
     console.log("filepath", filepath)
+    //everytime we open a new file, the curFile of BookMarks changed, then the bookmarksview's model should change too
+    content.bookmarks.curFile = content.pdfDoc.source
+    content.bookmarksview.model = content.bookmarks.marksList
     _pdfMultiView.visible = true
     beginview.visible = false
 }
@@ -37,13 +38,11 @@ function loadFile(filepath)
 function insertMenuItem(index, object)
 {
     recentFilesMenu.insertItem(index, object)
-    console.log("insert index: ", index)
-    console.log("object: ", object.text)
 }
 function removeMenuItem(index, object)
 {
     recentFilesMenu.removeItem(object)
-    console.log("remove index: ", index)
+    console.log("remove recentfile index: ", index)
 }
 
 function clearAllRecentfiles()
@@ -55,7 +54,6 @@ function clearAllRecentfiles()
         object = recentFilesInstantiator.objectAt(i)
         removeMenuItem(i, object)
     }
-    console.log()
     recentfiles.clear()
     beginview.recentfileslist.model = recentfiles.recentFiles //update the recentfileslist after clear all recentfiles
     console.log("recentFiles.size:",recentfiles.size())
@@ -80,6 +78,27 @@ function closefile()
     console.log("closefile",_pdfMultiView.document.source)
 }
 
+//book marks part
+function addmarks() {
+    var page;
+    page = (_pdfMultiView.currentPage + 1).toString()
+    content.bookmarks.addMark(page)
+    // update the bookmarksview model
+    content.bookmarksview.model = content.bookmarks.marksList
+}
+
+function removeMark(index)   //remove a mark
+{
+    content.bookmarks.remove(index)
+    // update the bookmarksview model
+    content.bookmarksview.model = content.bookmarks.marksList
+}
+function clearAllMarks()
+{
+    content.bookmarks.clear()
+    // update the bookmarksview model
+    content.bookmarksview.model = content.bookmarks.marksList
+}
 //text to speech
 function updateLocales() {
     let allLocales = _tts.availableLocales().map((locale) => locale.nativeLanguageName)

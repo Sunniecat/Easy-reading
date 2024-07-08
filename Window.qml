@@ -2,7 +2,8 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Pdf
 import QtQuick.Layouts
-import recentfiles
+// import recentfiles
+import myModule
 import "controller.js" as Controller
 import QtTextToSpeech
 import QtMultimedia
@@ -27,7 +28,6 @@ ApplicationWindow {
                     id: recentFilesMenu
                     title: qsTr("Recent Files")
                     icon.name: "document-open-recent"
-                    // enabled: recentFilesInstantiator.count > 0
                     Instantiator {
                         id: recentFilesInstantiator
                         model: recentfiles.recentFiles

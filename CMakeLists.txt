@@ -14,7 +14,8 @@ qt_add_executable(appEasy-reading main.cpp)
 qt_add_qml_module(
   appEasy-reading
   URI
-  "recentfiles"
+  "myModule"
+  # "recentfiles"
   VERSION
   1.0
   QML_FILES
@@ -30,7 +31,9 @@ qt_add_qml_module(
   Dialogs.qml
   QML_FILES
   controller.js
-  QML_FILES Begining.qml)
+  QML_FILES
+  Begining.qml
+  SOURCES bookmarks.h bookmarks.cpp)
 
 target_compile_features(appEasy-reading PRIVATE cxx_std_20)
 

@@ -5,7 +5,8 @@ import QtQuick.Layouts
 import QtQuick.Pdf
 import "controller.js" as Controller
 import QtTextToSpeech
-import recentfiles
+// import recentfiles
+import myModule
 
 Item {
     property alias pdfDoc: _pdfDoc
@@ -13,7 +14,8 @@ Item {
     property alias drawer: _drawer
     //侧边栏里
     property alias bookmarksview: _bookmarksview
-    property alias marksModel: _marksModel
+    property alias bookmarks: _bookmarks
+    // property alias marksModel: _marksModel
     signal fullScreen()
     signal window()
 
@@ -171,24 +173,65 @@ Item {
                 }
             }
          }
-        TreeView {
+
+     //book marks part
+        BookMarks{
+            id: _bookmarks
+            curFile: pdfDoc.source
+
+        }
+        ListView{
             id: _bookmarksview
-            implicitHeight: parent.height
-            implicitWidth: parent.width
-            model: _marksModel
-            delegate: ItemDelegate {
-                required property string name
-                required property int value
-                text: name + value
-                onClicked: _pdfMultiView.goToPage(value)
+            height: parent.height
+            width: parent.width
+            model: bookmarks.marksList
+            delegate: MenuItem{
+                text: bookmarks.displayMark(modelData)
+                onTriggered: {
+                    _pdfMultiView.goToPage(modelData - 1)  //bookmarks里保存的页数是从1开始的，而这里跳转，是从0开始的
+                }
+                TapHandler{
+                    acceptedButtons: Qt.RightButton
+                    onTapped: {
+                        bookmarksview.currentIndex = index
+                        marksOption.popup()
+                    }
+                }
             }
-            ListModel{
-                id: _marksModel
+
+        }//ListView
+        Menu{
+            id: marksOption  //some function abou marks
+            MenuItem{
+                id: _removeMark
+                text: qsTr("移除书签")
+                icon.name: "bookmark-remove"
+                onTriggered: {
+                    let index = bookmarksview.currentIndex
+                    Controller.removeMark(index)
+                }
+            }
+            MenuItem{
+                id: _goToMark
+                text: qsTr(" 跳转到此书签")
+                onTriggered: {
+                    var index = bookmarksview.currentIndex
+                    var page = bookmarksview.model[index]
+                    console.log("gotomark index", page)
+                    _pdfMultiView.goToPage(page - 1)
+                }
+            }
+            MenuItem{
+                id: _clearMarks
+                text: qsTr("删除所有书签")
+                icon.name: "edit-clear-history"
+                onTriggered: Controller.clearAllMarks()
             }
         }
-      }
-   }
-}
+
+      }//StackLayout
+   }//GroupBox
+}//Drawer
 
     Dialogs {
         id:_dialogs
