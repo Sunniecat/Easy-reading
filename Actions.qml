@@ -4,13 +4,12 @@ import QtTextToSpeech
 
 
 Item {
-    //文件
+    //File
     property  alias open: _open
-    property alias save: _save
     property alias about: _about
     property alias closefile: _closefile
 
-    //视图
+    //View
     property alias zoomIn: _zoomIn
     property alias zoomOut: _zoomOut
     property alias rotateLeft: _rotateLeft
@@ -20,8 +19,8 @@ Item {
     property alias zoomOriginal: _zoomOriginal
     property alias playModel: _playModel
 
-    //工具
-    property alias drawerAction: _drawerAction //侧边栏
+    //Tool
+    property alias drawerAction: _drawerAction //sidebar
     property alias selectAll: _selectAll
     property alias copy: _copy
     property alias addmarks: _addmarks
@@ -31,123 +30,117 @@ Item {
     property alias stop: _stop
     property alias pause: _pause
 
-    //文件
+    //file
     Action {
         id: _open
-        text: "打开(O)"  //用于打开文件
+        text: "Open(O)"
         icon.name: "document-open"
         shortcut: "Ctrl+O"
     }
-    Action {
-        id: _save
-        text: "保存(S)"   //用于做了修改后（比如做了批注等）保存
-        icon.name: "document-save"
-        shortcut: StandardKey.Save   //一般是Ctrl + S
-        // onTriggered:
-    }
+
     Action {
         id: _about
-        text: "关于"  //一些关于此阅读器的介绍等
+        text: "About"  //Some introduction about this reader, etc.
         icon.name: "help-about"
         // onTriggered:
     }
     Action {
         id: _closefile
-        text: "关闭文件"
+        text: "Close File"
         icon.name: "document-close"
     }
 
-    //视图
+    //View
     Action {
         id: _zoomIn
-        text: "放大"
+        text: "Zoom-in"
         icon.name: "zoom-in"
-        shortcut: StandardKey.ZoomIn  //一般是Ctrl + "+"  //经测试不是这个组合,而是Ctrl + shift + "+"
-        enabled: _pdfMultiView.renderScale < 10   //当符合条件时，此动作才是可用的（其实就是设置了缩放的上限即最大）
-        onTriggered: _pdfMultiView.renderScale *= 1.1  //每次在原有的比例上放大1.1倍数
+        shortcut: StandardKey.ZoomIn  //The usual shortcut is Ctrl + “+” // After testing, it’s not this combination, but Ctrl + Shift + “+”.
+        enabled: _pdfMultiView.renderScale < 10   //This action is only available when the conditions are met (it actually sets the upper limit of zoom, which is the maximum).
+        onTriggered: _pdfMultiView.renderScale *= 1.1  //Each time, zoom in by a factor of 1.1 times the original ratio.
     }
     Action {
-        id: _zoomOut   //一般是 Ctrl + ”-“
-        text: "缩小"
+        id: _zoomOut   //usual Ctrl + ”-“
+        text: "Zoom-out"
         icon.name: "zoom-out"
         shortcut: StandardKey.ZoomOut
-        enabled: _pdfMultiView.renderScale > 0.1   //当符合条件时，此动作才是可用的（其实就是设置了缩放的下限即最小）
+        enabled: _pdfMultiView.renderScale > 0.1   //This action is only available when the conditions are met (it actually sets the upper limit of zoom, which is the minmum).
         onTriggered: _pdfMultiView.renderScale /= 1.1
     }
     Action {
         id:_rotateLeft
-        text: "向左旋转"
+        text: "rotate left"
         icon.name: "object-rotate-left-symbolic"
         shortcut: "Ctrl+L"
     }
     Action {
         id:_rotateRight
-        text: "向右旋转"
+        text: "rotate right"
         icon.name: "object-rotate-right-symbolic"
         shortcut: "Ctrl+R"
     }
     Action {
         id:_zoomFitWidth
-        text: "适应宽度"
+        text: "fit width"
         icon.name: "zoom-fit-width"
         onTriggered: _pdfMultiView.scaleToWidth(appwindow.contentItem.width, appwindow.contentItem.height)
     }
     Action{
         id:_zoomFitBest
-        text: "适应整页"
+        text: "fit best"
         icon.name: "zoom-fit-best"
         onTriggered: _pdfMultiView.scaleToPage(appwindow.contentItem.width, appwindow.contentItem.height)
     }
     Action{
         id:_zoomOriginal
-        text: "初始化缩放"
+        text: "fit original"
         icon.name: "zoom-fit-original"
         onTriggered: _pdfMultiView.resetScale()
     }
     Action{
         id:_playModel
-        text: "播放模式"
+        text: "play Model"
         onTriggered: fullScreen()
     }
     Action{
         id:_fullScreen
-        text: "全屏模式"
+        text: "Full Screen"
     }
 
-    //工具
+    //Tool
     Action {
         id: _drawerAction
-        // text: "侧边栏"
+
         icon.name: "sidebar-expand-left"
         onTriggered: content.drawer.open()
     }
     Action{
         id:_selectAll
-        text:"全选"
+        text:"select all"
         icon.name: "edit-select-all-symbolic"
         onTriggered: _pdfMultiView.selectAll()
     }
     Action{
         id:_copy
-        text: "复制"
+        text: "copy"
         icon.name: "edit-copy-symbolic"
         enabled: _pdfMultiView.selectedText !== ""
         onTriggered: _pdfMultiView.copySelectionToClipboard()
     }
     Action {
         id: _addmarks
-        text: qsTr("添加书签")
+        text: qsTr("add bookmark")
         icon.name: "bookmark-new"
     }
     Action{
         id:_ttsSetting
         icon.name: "settings-configure-symbolic"
-        text: "阅读设置"
+        text: "Reading settings."
         onTriggered: content.dialogs.ttsSettingDialog.open()
     }
     Action{
         id:_currentPageTts
-        text: "阅读当前页面"
+        text: "read current page"
         icon.name: "media-playback-start-symbolic"
         enabled: [TextToSpeech.Paused, TextToSpeech.Ready].includes(_tts.state)
         onTriggered: {
@@ -162,21 +155,21 @@ Item {
     }
     Action{
         id:_resume
-        text:"继续"
+        text:"continue"
         icon.name: "media-playback-playing-symbolic"
         enabled: _tts.state == TextToSpeech.Paused
         onTriggered: _tts.resume()
     }
     Action{
         id:_stop
-        text:"停止"
+        text:"stop"
         icon.name: "media-playback-stop-symbolic"
         enabled: [TextToSpeech.Speaking, TextToSpeech.Paused].includes(_tts.state)
         onTriggered: _tts.stop()
     }
     Action{
         id:_pause
-        text:"暂停"
+        text:"pause"
         icon.name: "media-playback-paused-symbolic"
         enabled: _tts.state == TextToSpeech.Speaking
         onTriggered: _tts.pause()

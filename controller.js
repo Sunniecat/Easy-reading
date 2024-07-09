@@ -20,6 +20,11 @@ function openfile()
             })
     content.dialogs.fileOpen.open()
 }
+// about part
+function about(){
+    content.dialogs.aAbout.open()
+}
+
 
 //recentfiles part
 function loadFile(filepath)
@@ -33,7 +38,6 @@ function loadFile(filepath)
     content.bookmarksview.model = content.bookmarks.marksList
     _pdfMultiView.visible = true
     beginview.visible = false
-    _pdfMultiView.gotopage(_setting.previouspage)
 }
 
 function insertMenuItem(index, object)

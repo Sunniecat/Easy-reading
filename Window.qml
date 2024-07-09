@@ -27,9 +27,8 @@ ApplicationWindow {
     menuBar: MenuBar {
         Menu {
             id: fileMenu
-            title: qsTr("文件(&F)")   //可以Alt + F
+            title: qsTr("File(&F)")   //Alt + F
             MenuItem { action: actions.open }
-            MenuItem { action: actions.save }
 
             //recentfiles part
             Menu {
@@ -69,22 +68,22 @@ ApplicationWindow {
         }
         Menu {
             id: viewMenu
-            title: qsTr("视图(&V)")   //可以Alt + V
-            MenuItem { action: actions.zoomIn }  //放大(镜头拉近)
-            MenuItem { action: actions.zoomOut }  //缩小（拉远）
-            MenuItem { action: actions.rotateLeft } //向左旋转
-            MenuItem { action: actions.rotateRight } //向右旋转
-            MenuItem { action: actions.zoomFitWidth } //适应宽度缩放
-            MenuItem { action: actions.zoomFitBest }  //最佳缩放
-            MenuItem { action: actions.zoomOriginal } //初始化缩放
+            title: qsTr("View(&V)")   //Alt + V
+            MenuItem { action: actions.zoomIn }  //Zoom in (or bring the camera lens closer)
+            MenuItem { action: actions.zoomOut }  //Zoom out (or pull the camera back).
+            MenuItem { action: actions.rotateLeft } //Rotate to the left.
+            MenuItem { action: actions.rotateRight } //Rotate to the right
+            MenuItem { action: actions.zoomFitWidth } //Scale to fit width.
+            MenuItem { action: actions.zoomFitBest }  //Optimal zoom.
+            MenuItem { action: actions.zoomOriginal } //Initialize zoom.
             MenuItem { action: actions.playModel }
         }
 
         Menu {
-            title: qsTr("工具(&T)")
+            title: qsTr("Tool(&T)")
             Menu{
                 icon.name: "view-readermode-symbolic"
-                title: qsTr("有声阅读")
+                title: qsTr("Audio reading.")
                 MenuItem{ action:actions.ttsSetting }
                 MenuItem{ action:actions.currentPageTts }
                 MenuItem{ action:actions.resume }
@@ -100,18 +99,18 @@ ApplicationWindow {
                 action: actions.drawerAction
                 ToolTip.visible: enabled && hovered
                 ToolTip.delay: 2000
-                ToolTip.text: "打开边栏"
+                ToolTip.text: "Open the sidebar."
             }
             ToolButton{ action: actions.zoomIn }
             ToolButton{ action: actions.zoomOut }
             ToolButton{ action: actions.rotateLeft }
             ToolButton{ action: actions.rotateRight }
-            ToolButton{ action: actions.addmarks }  //添加书签
+            ToolButton{ action: actions.addmarks }  //add BookMarks
 
-            //搜索栏
+            //search bar
             TextField {
                 id: _searchField
-                placeholderText: "搜索"
+                placeholderText: "Search"
                 Layout.minimumWidth: 200
                 Layout.fillWidth: true
                 Layout.bottomMargin: 3
@@ -128,6 +127,8 @@ ApplicationWindow {
                 from: 1
                 to: content.pdfDoc.pageCount
                 editable: true
+                wheelEnabled: true
+                value:_pdfMultiView.currentPage
                 onValueModified: _pdfMultiView.goToPage(value - 1)
                 Shortcut {
                     sequence: "Ctrl+w"
@@ -158,6 +159,7 @@ ApplicationWindow {
             _pdfMultiView.pageRotation += 90
         }
         addmarks.onTriggered: Controller.addmarks()
+        about.onTriggered: Controller.about()
     }
 
     RecenFiles{
@@ -182,29 +184,32 @@ ApplicationWindow {
             anchors.fill:twoview
             searchString: _searchField.text
             visible: false
+            Component.onCompleted: {
+                _pdfMultiView.goToPage(_setting.previouspage)
+            }
         }
     }
-    //临时保存文本类
+    //Temporarily save text file.
     TextArea{
         id:_selectedText
         visible: false
         enabled: false
     }
 
-    //文本转语音
+    //Text-to-speech.
     TextToSpeech{
         id:_tts
-        volume: content.dialogs.ttsSettingDialog.volumeSlider.value //与slider绑定 下面同理
+        volume: content.dialogs.ttsSettingDialog.volumeSlider.value //Bind to slider, the same applies below.
         pitch: content.dialogs.ttsSettingDialog.pitchSlider.value
         rate: content.dialogs.ttsSettingDialog.rateSlider.value
 
-        onStateChanged: updateStateLabel(state) //状态转换
+        onStateChanged: updateStateLabel(state) //State transition.
 
-        function updateStateLabel(state) //状态函数
+        function updateStateLabel(state) //State function.
         {
             switch (state) {
             case TextToSpeech.Ready:
-                _statusLabel.text = qsTr("Ready to read") //判定引擎无误进入就绪态
+                _statusLabel.text = qsTr("Ready to read") //Determine that the engine enters the ready state without error.
                 break
             case TextToSpeech.Speaking:
                 _statusLabel.text = qsTr("Speaking")
@@ -226,7 +231,7 @@ ApplicationWindow {
 
     }
 
-    footer:Label //用于显示当前阅读状态
+    footer:Label //Used to display the current reading status.
     {
         id: _statusLabel
         color: "black"

@@ -8,13 +8,24 @@ import "controller.js" as Controller
 Item {
     property alias fileOpen: _fileOpen
     property alias ttsSettingDialog: _ttsSettingDialog
+    property alias aAbout: _about
 
-    //打开pdf文件窗口
+    //Open PDF file window.
     FileDialog{
         id: _fileOpen
         title: "Open a PDF file"
         fileMode: FileDialog.OpenFile
         nameFilters: [ "PDF files (*.pdf)" ]
+    }
+
+    //about
+    MessageDialog{
+        id:_about
+        modality: Qt.WindowModal
+        buttons:MessageDialog.Ok
+        text:"Easy-reading is a PDF free reader"
+        informativeText: qsTr("Easy-reading is a free software, and you can download its source code from www.github.com")
+        detailedText: "Copyright©2024 EASYREADING (easyreading@163.com)"
     }
 
     Dialog{
@@ -42,7 +53,7 @@ Item {
                 model: _tts.availableEngines()
                 onActivated: {
                     _tts.engine = textAt(currentIndex)
-                    Controller.updateLocales() //实时更新选项
+                    Controller.updateLocales() //Real-time update options.
                     Controller.updateVoices()
                 }
             }
@@ -56,7 +67,7 @@ Item {
                 onActivated: {
                     let locales = _tts.availableLocales()
                     _tts.locale = locales[currentIndex]
-                    Controller.updateVoices() //实时更新选项
+                    Controller.updateVoices() //Real-time update options.
                 }
             }
             Text {

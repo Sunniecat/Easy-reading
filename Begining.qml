@@ -25,7 +25,7 @@ Rectangle{
             height: 50
             color: "lightgrey"
             Text {
-                text: qsTr("欢迎使用")
+                text: qsTr(" Welcome ")
                 anchors.fill: parent
                 fontSizeMode: Text.FixedSize
                 font.pointSize: 18
@@ -46,7 +46,7 @@ Rectangle{
         }
         Button{
             icon.name: "document-open"
-            text: qsTr("打开文档")
+            text: qsTr("open document")
             font.pointSize: 10
             height: 30
             width: 100
@@ -60,13 +60,13 @@ Rectangle{
         }
     }
     Rectangle{
-        id: rightpart  //it is used to show the text of right part, include "最近打开" and "清楚所有"
+        id: rightpart  //it is used to show the text of right part, include "Recently opened." and "clear all"
         width: parent.width*0.65
         height: 60
         color: "lightgrey"
         anchors.left: txt.right
         Text {
-            text: qsTr("最近打开")
+            text: qsTr("Recently opened.")
             fontSizeMode: Text.FixedSize
             font.pointSize: 16
             anchors.left: parent.left
@@ -75,7 +75,7 @@ Rectangle{
         }
         Button{
             icon.name: "edit-clear-history"
-            text: qsTr("清楚所有")
+            text: qsTr("clear all")
             font.pointSize: 10
             height: 30
             width: 100
@@ -125,10 +125,10 @@ Rectangle{
         Menu{
             id: rightbuttonMenu  //click the right button of mouse on recent file, then pop up a menu
             MenuItem{
-                text: "忘记此项(F)"
+                text: "Forget this item(F)"
                 icon.name: "edit-clear-history"
                 onTriggered: {
-                    console.log("clicked 忘记此项")
+                    console.log("clicked Forget this item")
                     let index = recentfileslist.currentIndex
                     Controller.removeRecentfile(index)
                     console.log("forget index: ", index)

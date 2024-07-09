@@ -12,20 +12,20 @@ Item {
     property alias pdfDoc: _pdfDoc
     property alias dialogs: _dialogs
     property alias drawer: _drawer
-    //侧边栏里
+    //sidebar
     property alias bookmarksview: _bookmarksview
     property alias bookmarks: _bookmarks
     // property alias marksModel: _marksModel
     signal fullScreen()
     signal window()
 
-    //pdf文件类
+    //pdf fileclass
     PdfDocument{
         id:_pdfDoc
         source:"" //文件资源地址
     }
 
-    //侧边栏
+    //sidebar
     Drawer {
         id: _drawer
         width: 300
@@ -36,19 +36,19 @@ Item {
             id:_drawerTabBar
             transformOrigin: Item.TopRight
             TabButton{
-                text:qsTr( "目录" )
+                text:qsTr( "Table of Contents" )
                 width: 60
             }
             TabButton{
-                text: qsTr( "搜索结果" )
+                text: qsTr( "Search Results" )
                 width: 60
             }
             TabButton{
-                text:qsTr( "缩略图" )
+                text:qsTr( "Thumbnail." )
                 width: 60
             }
             TabButton{
-                text:qsTr( "书签" )
+                text:qsTr( "BookMark" )
                 width: 60
             }
         }
@@ -66,12 +66,12 @@ Item {
                     wrapMode: Text.WordWrap
                 }
 
-                //目录的显示
+                //Display of the table of contents.
                 TreeView {
                     id: _bookDirView
                     implicitHeight: parent.height
                     implicitWidth: parent.width
-                    columnWidthProvider: function() { return width }  //保证了目录宽度不会超过GroupBox
+                    columnWidthProvider: function() { return width }  //Ensure that the width of the table of contents does not exceed the GroupBox.
                     delegate: TreeViewDelegate {
                         onClicked: _pdfMultiView.goToLocation(page, location, zoom)
                     }
@@ -81,7 +81,7 @@ Item {
                     ScrollBar.vertical: ScrollBar{}
                 }
 
-        //搜索结果的显示
+        //搜索结果的显示Display the search results
         ListView {
             id: _searchResultsList
             implicitHeight: parent.height
@@ -125,7 +125,7 @@ Item {
          }
         }
 
-        //缩略图的显示
+        //display thumbails
         GridView{
             id: _thumbNailsView
             implicitWidth: parent.width
@@ -149,9 +149,9 @@ Item {
                         id:_image
                         document: _pdfDoc
                         currentFrame: index
-                        asynchronous: true//表示页面渲染是异步进行的。这意味着PDF页面的渲染不会阻塞UI线程，用户界面在渲染过程中仍然可以响应用户操作。
+                        asynchronous: true// indicates that page rendering is performed asynchronously. This means that the rendering of PDF pages does not block the UI thread, and the user interface remains responsive to user actions during the rendering process.
 
-                        fillMode: Image.PreserveAspectFit//保持其宽高比的方式填充可用空间
+                        fillMode: Image.PreserveAspectFit//Fill the available space while maintaining its aspect ratio.
                         property bool landscape: pointSize.width > pointSize.height
 
                         width: landscape ? _thumbNailsView.cellWidth - 6
@@ -188,7 +188,7 @@ Item {
             delegate: MenuItem{
                 text: bookmarks.displayMark(modelData)
                 onTriggered: {
-                    _pdfMultiView.goToPage(modelData - 1)  //bookmarks里保存的页数是从1开始的，而这里跳转，是从0开始的
+                    _pdfMultiView.goToPage(modelData - 1)  //The page numbers saved in bookmarks start from 1, whereas the jump here starts from 0.
                 }
                 TapHandler{
                     acceptedButtons: Qt.RightButton
@@ -204,7 +204,7 @@ Item {
             id: marksOption  //some function abou marks
             MenuItem{
                 id: _removeMark
-                text: qsTr("移除书签")
+                text: qsTr("Remove bookmark")
                 icon.name: "bookmark-remove"
                 onTriggered: {
                     let index = bookmarksview.currentIndex
@@ -213,7 +213,7 @@ Item {
             }
             MenuItem{
                 id: _goToMark
-                text: qsTr(" 跳转到此书签")
+                text: qsTr(" go to mark page")
                 onTriggered: {
                     var index = bookmarksview.currentIndex
                     var page = bookmarksview.model[index]
@@ -223,7 +223,7 @@ Item {
             }
             MenuItem{
                 id: _clearMarks
-                text: qsTr("删除所有书签")
+                text: qsTr("clear all mark")
                 icon.name: "edit-clear-history"
                 onTriggered: Controller.clearAllMarks()
             }
