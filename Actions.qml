@@ -33,14 +33,14 @@ Item {
     //file
     Action {
         id: _open
-        text: "Open(O)"
+        text: "Open(O)"//use to open a file
         icon.name: "document-open"
         shortcut: "Ctrl+O"
     }
 
     Action {
         id: _about
-        text: "About"  //Some introduction about this reader, etc.
+        text: "about"  //some introduction about the app
         icon.name: "help-about"
         // onTriggered:
     }
@@ -65,41 +65,44 @@ Item {
         icon.name: "zoom-out"
         shortcut: StandardKey.ZoomOut
         enabled: _pdfMultiView.renderScale > 0.1   //This action is only available when the conditions are met (it actually sets the upper limit of zoom, which is the minmum).
-        onTriggered: _pdfMultiView.renderScale /= 1.1
+     onTriggered: _pdfMultiView.renderScale /= 1.1
     }
+
+
     Action {
         id:_rotateLeft
-        text: "rotate left"
+        text: "rotateLeft"
         icon.name: "object-rotate-left-symbolic"
         shortcut: "Ctrl+L"
     }
     Action {
         id:_rotateRight
-        text: "rotate right"
+        text: "rotateRight"
         icon.name: "object-rotate-right-symbolic"
         shortcut: "Ctrl+R"
     }
     Action {
         id:_zoomFitWidth
-        text: "fit width"
+        text: "FitWidth"
         icon.name: "zoom-fit-width"
         onTriggered: _pdfMultiView.scaleToWidth(appwindow.contentItem.width, appwindow.contentItem.height)
     }
     Action{
         id:_zoomFitBest
-        text: "fit best"
+        text: "FitBest"
         icon.name: "zoom-fit-best"
         onTriggered: _pdfMultiView.scaleToPage(appwindow.contentItem.width, appwindow.contentItem.height)
     }
     Action{
         id:_zoomOriginal
-        text: "fit original"
+        text: "zoomOriginal"
         icon.name: "zoom-fit-original"
         onTriggered: _pdfMultiView.resetScale()
     }
     Action{
         id:_playModel
-        text: "play Model"
+
+        text: "playModel"
         onTriggered: fullScreen()
     }
     Action{
@@ -107,16 +110,15 @@ Item {
         text: "Full Screen"
     }
 
-    //Tool
+    //tools part
     Action {
         id: _drawerAction
-
         icon.name: "sidebar-expand-left"
         onTriggered: content.drawer.open()
     }
     Action{
         id:_selectAll
-        text:"select all"
+        text:"selectAll"
         icon.name: "edit-select-all-symbolic"
         onTriggered: _pdfMultiView.selectAll()
     }
@@ -135,7 +137,7 @@ Item {
     Action{
         id:_ttsSetting
         icon.name: "settings-configure-symbolic"
-        text: "Reading settings."
+        text: "audioReadingSetting"
         onTriggered: content.dialogs.ttsSettingDialog.open()
     }
     Action{
@@ -155,7 +157,7 @@ Item {
     }
     Action{
         id:_resume
-        text:"continue"
+        text:"resume"
         icon.name: "media-playback-playing-symbolic"
         enabled: _tts.state == TextToSpeech.Paused
         onTriggered: _tts.resume()

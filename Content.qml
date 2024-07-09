@@ -12,17 +12,17 @@ Item {
     property alias pdfDoc: _pdfDoc
     property alias dialogs: _dialogs
     property alias drawer: _drawer
-    //sidebar
+
+    //in sidebar
     property alias bookmarksview: _bookmarksview
     property alias bookmarks: _bookmarks
     // property alias marksModel: _marksModel
     signal fullScreen()
     signal window()
-
-    //pdf fileclass
+    //pdf document
     PdfDocument{
         id:_pdfDoc
-        source:"" //文件资源地址
+        source:""
     }
 
     //sidebar
@@ -36,7 +36,8 @@ Item {
             id:_drawerTabBar
             transformOrigin: Item.TopRight
             TabButton{
-                text:qsTr( "Table of Contents" )
+
+                text:qsTr( "Catalogue" )
                 width: 60
             }
             TabButton{
@@ -66,7 +67,9 @@ Item {
                     wrapMode: Text.WordWrap
                 }
 
-                //Display of the table of contents.
+
+                //catalogue view
+
                 TreeView {
                     id: _bookDirView
                     implicitHeight: parent.height
@@ -81,7 +84,8 @@ Item {
                     ScrollBar.vertical: ScrollBar{}
                 }
 
-        //搜索结果的显示Display the search results
+
+        //Display the search results
         ListView {
             id: _searchResultsList
             implicitHeight: parent.height
@@ -124,7 +128,6 @@ Item {
                 onClicked: _pdfMultiView.searchModel.currentResult = _searchResultDelegate.index
          }
         }
-
         //display thumbails
         GridView{
             id: _thumbNailsView
@@ -150,10 +153,8 @@ Item {
                         document: _pdfDoc
                         currentFrame: index
                         asynchronous: true// indicates that page rendering is performed asynchronously. This means that the rendering of PDF pages does not block the UI thread, and the user interface remains responsive to user actions during the rendering process.
-
                         fillMode: Image.PreserveAspectFit//Fill the available space while maintaining its aspect ratio.
                         property bool landscape: pointSize.width > pointSize.height
-
                         width: landscape ? _thumbNailsView.cellWidth - 6
                                          : height * pointSize.width / pointSize.height
                         height: landscape ? width * pointSize.height / pointSize.width
@@ -188,7 +189,7 @@ Item {
             delegate: MenuItem{
                 text: bookmarks.displayMark(modelData)
                 onTriggered: {
-                    _pdfMultiView.goToPage(modelData - 1)  //The page numbers saved in bookmarks start from 1, whereas the jump here starts from 0.
+                    _pdfMultiView.goToPage(modelData - 1)
                 }
                 TapHandler{
                     acceptedButtons: Qt.RightButton
@@ -213,7 +214,7 @@ Item {
             }
             MenuItem{
                 id: _goToMark
-                text: qsTr(" go to mark page")
+                text: qsTr("jump to the mark")
                 onTriggered: {
                     var index = bookmarksview.currentIndex
                     var page = bookmarksview.model[index]
@@ -223,7 +224,7 @@ Item {
             }
             MenuItem{
                 id: _clearMarks
-                text: qsTr("clear all mark")
+                text: qsTr("clearAll")
                 icon.name: "edit-clear-history"
                 onTriggered: Controller.clearAllMarks()
             }

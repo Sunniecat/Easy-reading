@@ -189,27 +189,27 @@ ApplicationWindow {
             }
         }
     }
-    //Temporarily save text file.
+
+    //Temporarily save text”
     TextArea{
         id:_selectedText
         visible: false
         enabled: false
     }
-
-    //Text-to-speech.
+    //Text-to-speech
     TextToSpeech{
         id:_tts
-        volume: content.dialogs.ttsSettingDialog.volumeSlider.value //Bind to slider, the same applies below.
+        volume: content.dialogs.ttsSettingDialog.volumeSlider.value //Bound to the slider, the same applies below
         pitch: content.dialogs.ttsSettingDialog.pitchSlider.value
         rate: content.dialogs.ttsSettingDialog.rateSlider.value
 
-        onStateChanged: updateStateLabel(state) //State transition.
+        onStateChanged: updateStateLabel(state) //State transition
 
-        function updateStateLabel(state) //State function.
+        function updateStateLabel(state) //state function
         {
             switch (state) {
             case TextToSpeech.Ready:
-                _statusLabel.text = qsTr("Ready to read") //Determine that the engine enters the ready state without error.
+                _statusLabel.text = qsTr("Ready to read") //Judge engine enters ready state without error.
                 break
             case TextToSpeech.Speaking:
                 _statusLabel.text = qsTr("Speaking")

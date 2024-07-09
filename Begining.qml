@@ -25,10 +25,11 @@ Rectangle{
             height: 50
             color: "lightgrey"
             Text {
-                text: qsTr(" Welcome ")
+
+                text: qsTr("Welcome to use")
                 anchors.fill: parent
                 fontSizeMode: Text.FixedSize
-                font.pointSize: 18
+                font.pointSize: 16
             }
         }
         Rectangle{
@@ -66,9 +67,9 @@ Rectangle{
         color: "lightgrey"
         anchors.left: txt.right
         Text {
-            text: qsTr("Recently opened.")
+            text: qsTr("Recently opened files")
             fontSizeMode: Text.FixedSize
-            font.pointSize: 16
+            font.pointSize: 14
             anchors.left: parent.left
             anchors.leftMargin: 8
             anchors.verticalCenter: parent.verticalCenter

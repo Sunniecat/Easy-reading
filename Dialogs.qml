@@ -10,7 +10,7 @@ Item {
     property alias ttsSettingDialog: _ttsSettingDialog
     property alias aAbout: _about
 
-    //Open PDF file window.
+    //open a window to choose a pdf file
     FileDialog{
         id: _fileOpen
         title: "Open a PDF file"
@@ -67,7 +67,7 @@ Item {
                 onActivated: {
                     let locales = _tts.availableLocales()
                     _tts.locale = locales[currentIndex]
-                    Controller.updateVoices() //Real-time update options.
+                    Controller.updateVoices() //Real-time Update Options
                 }
             }
             Text {
