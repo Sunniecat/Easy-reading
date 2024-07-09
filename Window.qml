@@ -230,6 +230,20 @@ ApplicationWindow {
                       }
 
     }
+    DropArea {
+        anchors.fill: parent
+        keys: ["text/uri-list"]
+        onEntered: (drag) => {
+                       drag.accepted = (drag.proposedAction === Qt.MoveAction || drag.proposedAction === Qt.CopyAction) &&
+                       drag.hasUrls && drag.urls[0].endsWith("pdf")
+                   }
+        onDropped: (drop) => {
+                       content.pdfDoc.source=drop.urls[0]
+                       drop.acceptProposedAction()
+                   }
+    }
+
+
 
     footer:Label //Used to display the current reading status.
     {
